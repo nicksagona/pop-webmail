@@ -10,7 +10,7 @@
     ],
     "require": {
         "php": ">=7.0.0",
-        "popphp/popphp": "^3.6.3",
+        "popphp/popphp": "^3.2.1",
         "popphp/pop-cookie": "^3.1.1",
         "popphp/pop-dir": "^3.0.0",
         "popphp/pop-form": "^3.1.5",
