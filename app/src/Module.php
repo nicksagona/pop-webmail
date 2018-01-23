@@ -16,7 +16,7 @@ namespace PopWebmail;
 use Pop\Application;
 use Pop\Http\Request;
 use Pop\Http\Response;
-use Pop\Session\Session;
+use Pop\Mail;
 use Pop\View\View;
 
 /**
@@ -120,14 +120,14 @@ class Module extends \Pop\Module\Module
                     ->setPassword($application->config['mail']['smtp']['password']);
                 $transport->setEncryption($application->config['mail']['smtp']['security']);
 
-                return new \Pop\Mail\Mailer($transport);
+                return new Mail\Mailer($transport);
             },
             'params' => [$this->application]
         ]);
 
         $this->application->services()->set('imap', [
             'call' => function($application) {
-                $imap = new \Pop\Mail\Client\Imap(
+                $imap = new Mail\Client\Imap(
                     $application->config['mail']['imap']['host'], $application->config['mail']['imap']['port']
                 );
 

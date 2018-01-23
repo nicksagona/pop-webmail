@@ -4,10 +4,10 @@
  */
 
 return [
-    'routes' => include 'routes/http.php',
-    'mail'   => include 'mail.php',
-    'forms'  => include 'forms.php',
-    'pagination' => 25,
+    'routes'         => include 'routes/http.php',
+    'mail'           => include 'mail.php',
+    'forms'          => include 'forms.php',
+    'pagination'     => 25,
     'services'       => [
         'session'    => 'Pop\Session\Session::getInstance',
         'cookie'     => [
