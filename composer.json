@@ -10,7 +10,15 @@
     ],
     "require": {
         "php": ">=7.0.0",
-        "popphp/popphp-framework": "^3.6.3"
+        "popphp/popphp": "^3.6.3",
+        "popphp/pop-cookie": "^3.1.1",
+        "popphp/pop-dir": "^3.0.0",
+        "popphp/pop-form": "^3.1.5",
+        "popphp/pop-http": "^3.0.3",
+        "popphp/pop-mail": "^3.0.0",
+        "popphp/pop-paginator": "^3.0.1",
+        "popphp/pop-session ": "^3.1.1",
+        "popphp/pop-view ": "^3.0.1"
     },
     "autoload" : {
         "psr-4": {
