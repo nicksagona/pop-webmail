@@ -1,0 +1,25 @@
+{
+    "name": "nicksagona/pop-webmail",
+    "description": "Pop PHP Webmail Application",
+    "authors": [
+        {
+            "name": "Nick Sagona",
+            "email": "nick@nolainteractive.com",
+            "homepage": "https://www.nicksagona.com/"
+        }
+    ],
+    "require": {
+        "php": ">=7.0.0",
+        "popphp/popphp-framework": "^3.6.3"
+    },
+    "autoload" : {
+        "psr-4": {
+            "PopWebmail\\": "app/src/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
+    }
+}
