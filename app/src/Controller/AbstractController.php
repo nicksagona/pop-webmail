@@ -53,7 +53,7 @@ abstract class AbstractController extends \Pop\Controller\AbstractController
      * View path
      * @var string
      */
-    protected $viewPath = __DIR__ . '/../../../../view';
+    protected $viewPath = __DIR__ . '/../../view';
 
     /**
      * View object

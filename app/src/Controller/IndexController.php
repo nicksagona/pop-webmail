@@ -27,6 +27,7 @@ use PopWebmail\Form;
  */
 class IndexController extends AbstractController
 {
+
     /**
      * Login action method
      *
@@ -47,6 +48,18 @@ class IndexController extends AbstractController
     public function logout()
     {
         $this->redirect('/login');
+    }
+
+    /**
+     * Erro action method
+     *
+     * @return void
+     */
+    public function error()
+    {
+        $this->prepareView('error.phtml');
+        $this->view->title = 'Error';
+        $this->send();
     }
 
 }

@@ -27,12 +27,13 @@ use PopWebmail\Form;
  */
 class MailController extends AbstractController
 {
+
     /**
-     * Login action method
+     * Index action method
      *
      * @return void
      */
-    public function mail()
+    public function index()
     {
         $this->prepareView('mail.phtml');
         $this->view->title = 'Mail';

@@ -2,31 +2,31 @@
 
 return [
     '/login[/]' => [
-        'controller' => 'Pab\Controller\IndexController',
+        'controller' => 'PopWebmail\Controller\IndexController',
         'action'     => 'login'
     ],
     '/logout[/]' => [
-        'controller' => 'Pab\Controller\IndexController',
+        'controller' => 'PopWebmail\Controller\IndexController',
         'action'     => 'logout'
     ],
     '/mail[/]' => [
-        'controller' => 'Pab\Controller\MailController',
+        'controller' => 'PopWebmail\Controller\MailController',
         'action'     => 'index'
     ],
     '/mail/:id' => [
-        'controller' => 'Pab\Controller\MailController',
+        'controller' => 'PopWebmail\Controller\MailController',
         'action'     => 'view'
     ],
     '/mail/attachments/:id/:i' => [
-        'controller' => 'Pab\Controller\MailController',
+        'controller' => 'PopWebmail\Controller\MailController',
         'action'     => 'attachments'
     ],
     '/mail/compose[/]' => [
-        'controller' => 'Pab\Controller\MailController',
+        'controller' => 'PopWebmail\Controller\MailController',
         'action'     => 'compose'
     ],
     '*' => [
-        'controller' => 'Pab\Controller\IndexController',
+        'controller' => 'PopWebmail\Controller\IndexController',
         'action'     => 'error'
     ]
 ];

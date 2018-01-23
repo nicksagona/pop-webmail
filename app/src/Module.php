@@ -54,7 +54,7 @@ class Module extends \Pop\Module\Module
     {
         parent::register($application);
 
-        $this->initMail();
+        //$this->initMail();
 
         if (null !== $this->application->router()) {
             $this->application->router()->addControllerParams(
@@ -65,7 +65,7 @@ class Module extends \Pop\Module\Module
                 ]
             );
 
-            $this->application->on('app.dispatch.pre', 'Pab\Http\Web\Event\Auth::authenticate');
+            //$this->application->on('app.dispatch.pre', 'PopWebmail\Event\Auth::authenticate');
         }
 
         return $this;
