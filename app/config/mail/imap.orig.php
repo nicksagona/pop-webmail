@@ -3,7 +3,5 @@
 return [
     'host'     => '',
     'port'     => '',
-    'username' => '',
-    'password' => '',
     'folder'   => ''
 ];
