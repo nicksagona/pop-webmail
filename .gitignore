@@ -4,5 +4,5 @@
 composer.lock
 vendor
 /public/assets/fonts
-/public/app.*
+/public/assets/app.*
 /node_modules
