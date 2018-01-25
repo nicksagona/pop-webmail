@@ -9,6 +9,6 @@ services:
       XDEBUG_CONFIG: remote_enable=1
       PHP_IDE_CONFIG: serverName=localhost
     ports:
-      - 80:80
+      - 8000:80
     volumes:
       - .:/tripleshot
