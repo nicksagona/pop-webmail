@@ -1,6 +1,6 @@
 FROM ralphschindler/tripleshot:latest
 
-ENV PATH $PATH:/app/vendor/bin:/app/node_modules/.bin:/app
+ENV PATH $PATH:/tripleshot/vendor/bin:/tripleshot/node_modules/.bin:/tripleshot
 ENV APP_NAME pop-webmail
 ENV COMPOSER_ALLOW_SUPERUSER 1
 ENV APP_ENV production
