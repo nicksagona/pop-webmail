@@ -9,19 +9,19 @@ return [
         'controller' => 'PopWebmail\Controller\IndexController',
         'action'     => 'logout'
     ],
-    '[/]' => [
+    '/mail[/]' => [
         'controller' => 'PopWebmail\Controller\MailController',
         'action'     => 'index'
     ],
-    '/:id' => [
+    '/mail/:id' => [
         'controller' => 'PopWebmail\Controller\MailController',
         'action'     => 'view'
     ],
-    '/attachments/:id/:i' => [
+    '/mail/attachments/:id/:i' => [
         'controller' => 'PopWebmail\Controller\MailController',
         'action'     => 'attachments'
     ],
-    '/compose[/]' => [
+    '/mail/compose[/]' => [
         'controller' => 'PopWebmail\Controller\MailController',
         'action'     => 'compose'
     ],

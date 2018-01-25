@@ -1,0 +1,218 @@
+/**
+ * mail.scss
+ */
+
+.mail-div {
+  margin: 0 auto;
+  padding: 0;
+  width: 100%;
+  overflow: auto;
+}
+
+.mail-folder-div {
+  margin: 0 20px 0 0;
+  padding: 0 20px 0 0;
+  width: 180px;
+  float: left;
+  overflow: auto;
+  border-right: solid 1px #ccc;
+}
+
+.mail-folder-div > ul {
+  margin: 0;
+  padding: 0;
+}
+
+.mail-folder-div > ul > li {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  clear: both;
+  display: block;
+  border-top: solid 1px #ccc;
+}
+
+.mail-folder-div > ul > li > a:nth-child(1) > i.material-icons {
+  position: relative;
+  margin-right: 5px;
+  top: 5px;
+}
+
+.mail-folder-div > ul > li > a:nth-child(1) {
+  margin: 0;
+  padding: 10px 0 10px 0;
+  display: inline-block;
+  width: 135px;
+  float: left;
+}
+
+.mail-folder-div > ul > li > a:nth-child(2) {
+  margin: 0;
+  padding: 10px 0 10px 5px;
+  display: inline-block;
+  width: 15px;
+  text-align: center;
+  float: left;
+}
+
+.mail-folder-div > ul > li > ul {
+  clear: both;
+  margin: 0;
+  padding: 0;
+  display: none;
+}
+
+.mail-folder-div > ul > li > ul > li {
+  margin: 0;
+  padding: 0;
+  font-size: 0.825em;
+  list-style-type: none;
+}
+
+.mail-folder-div > ul > li > ul > li > a {
+  margin: 0;
+  padding: 5px 0 5px 20px;
+  display: block;
+  background-color: #ededed;
+  border-top: solid 1px #ccc;
+}
+
+.mail-folder-div > ul > li > ul > li > a > i.material-icons {
+  position: relative;
+  margin-right: 5px;
+  top: 5px;
+}
+
+.mail-list-div {
+  margin: 0;
+  padding: 0;
+  width: calc(100% - 200px);
+  float: right;
+}
+
+.mail-nav {
+  margin: 0 auto 10px auto;
+  padding: 0;
+  overflow: auto;
+  float: right;
+}
+
+.mail-nav > a {
+  margin: 0 0 0 4px;
+  padding: 3px 5px 3px 5px;
+  width: 34px;
+  height: 30px;
+  overflow: hidden;
+  text-align: center;
+  display: inline-block;
+  float: right;
+  border: solid 1px #868e96;
+  border-radius: 3px;
+}
+.mail-nav > a > i.material-icons {
+  position: relative;
+  top: -1px;
+}
+
+table.mail-table > tbody > tr > td {
+  border-top: solid 1px #ddd;
+}
+
+#mail_process_action {
+  margin-right: 10px;
+  height: 38px;
+}
+
+#mail-compose-form {
+  clear: both;
+}
+
+#mail-compose-form-fieldset-1 > dl > dt {
+  margin: 0;
+  padding: 5px 10px 10px 0;
+  text-align: right;
+  float: left;
+  display: block;
+  width: 75px;
+}
+
+#mail-compose-form-fieldset-1 > dl > dd {
+  margin: 0;
+  padding: 0 0 10px 0;
+  float: left;
+  display: block;
+  width: calc(100% - 75px);
+}
+
+#mail-compose-form-fieldset-2 {
+  margin: 10px 0 5px 0;
+  padding: 20px 0 5px 0;
+  clear: both;
+  border-top: solid 1px #ddd;
+}
+
+#mail-compose-form-fieldset-3 > dl > dd:nth-child(1) {
+  width: 42%;
+  display: inline-block;
+  float: right;
+}
+
+button.mail-send-btn:after {
+  font-family: "FontAwesome";
+  font-weight: normal;
+  content: "\f1d8";
+  margin: 0;
+  padding: 0 0 0 5px;
+  color: #fff;
+  font-size: 1.1em;
+  text-align: right;
+}
+
+button.mail-cancel-btn:after {
+  font-family: "FontAwesome";
+  font-weight: normal;
+  content: "\f05e";
+  margin: 0;
+  padding: 0 0 0 5px;
+  color: #fff;
+  font-size: 1.1em;
+  text-align: right;
+}
+
+#mail-compose-form-fieldset-3 > dl > dd:nth-child(2) {
+  width: 42%;
+  display: inline-block;
+  float: left;
+}
+
+#mail-compose-form-fieldset-3 > dl > dd:nth-child(3) {
+  clear: both;
+}
+
+#dropzone {
+  position: relative;
+  margin: 0 auto;
+  padding: 0;
+  width: 100%;
+  height: 160px;
+  font-weight: bold;
+  font-size: 2.2em;
+  text-align: center;
+  color: #aaa;
+  border: dashed 5px #aaa;
+  background-color: #eee;
+}
+
+.mail-sent {
+  margin-top: 160px;
+}
+
+.mail-sent > h3 {
+  color: #31771b;
+}
+
+.mail-sent > h3 > i {
+  position: relative;
+  top: 4px;
+  margin-right: 10px;
+}

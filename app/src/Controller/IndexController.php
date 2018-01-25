@@ -51,7 +51,7 @@ class IndexController extends AbstractController
     }
 
     /**
-     * Erro action method
+     * Error action method
      *
      * @return void
      */
