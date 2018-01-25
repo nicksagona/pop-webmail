@@ -3,3 +3,6 @@
 /logs
 composer.lock
 vendor
+/public/assets/fonts
+/public/app.*
+/node_modules

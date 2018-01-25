@@ -1,0 +1,14 @@
+version: '2.0'
+
+services:
+  web:
+    build: .
+    environment:
+      APP_NAME: pop-webmail
+      APP_ENV: local
+      XDEBUG_CONFIG: remote_enable=1
+      PHP_IDE_CONFIG: serverName=localhost
+    ports:
+      - 80:80
+    volumes:
+      - .:/tripleshot
