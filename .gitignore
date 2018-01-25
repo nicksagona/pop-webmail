@@ -1,8 +1,7 @@
 /app/config/mail/imap.php
 /app/config/mail/smtp.php
 /logs
-composer.lock
-vendor
+/vendor
 /public/assets/fonts
 /public/assets/app.*
 /node_modules
