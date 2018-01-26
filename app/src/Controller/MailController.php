@@ -35,8 +35,9 @@ class MailController extends AbstractController
      */
     public function index()
     {
-        $this->prepareView('index.phtml');
+        $this->prepareView('mail/index.phtml');
         $this->view->title = 'Mail';
+        $this->view->pages = null;
         $this->send();
     }
 

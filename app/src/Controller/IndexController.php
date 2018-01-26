@@ -29,6 +29,16 @@ class IndexController extends AbstractController
 {
 
     /**
+     * Index action method
+     *
+     * @return void
+     */
+    public function index()
+    {
+        $this->redirect('/mail');
+    }
+
+    /**
      * Login action method
      *
      * @return void

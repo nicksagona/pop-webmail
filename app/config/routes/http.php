@@ -9,6 +9,10 @@ return [
         'controller' => 'PopWebmail\Controller\IndexController',
         'action'     => 'logout'
     ],
+    '[/]' => [
+        'controller' => 'PopWebmail\Controller\IndexController',
+        'action'     => 'index'
+    ],
     '/mail[/]' => [
         'controller' => 'PopWebmail\Controller\MailController',
         'action'     => 'index'
