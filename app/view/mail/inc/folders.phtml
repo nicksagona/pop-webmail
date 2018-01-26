@@ -1,0 +1,25 @@
+<?php
+
+function generateFolderList($folders, $depth = 0, $parent = null, $currentFolder) {
+    $depth++;
+
+    $output = str_repeat('    ', $depth) . '<ul>' . PHP_EOL;
+
+    foreach($folders as $folderName => $folderContent) {
+        $current = (($currentFolder) == $parent . $folderName) ? ' class="current-folder"' : '';
+        $url     = ($parent . $folderName != '[Gmail]') ? '/mail?folder=' . $parent . $folderName . '"' : '#" onclick="return false;"';
+        $output .= str_repeat('    ', $depth) . '    <li><a href="' . $url . $current .
+            '>' . '<i class="material-icons icon-sm">folder' . (($current != '') ? '_open' : '') . '</i>' . $folderName . '</a>' .
+            ((!empty($folderContent['subfolders'])) ? '<a href="#" onclick="return pab.toggleMailFolder(this);"><i class="material-icons icon-sm">expand_more</i></a>' : '');
+        if (!empty($folderContent['subfolders'])) {
+            $output .= PHP_EOL . generateFolderList($folderContent['subfolders'], $depth, $parent . $folderName . '/', $currentFolder) . str_repeat('    ', $depth);
+        }
+        $output .= '</li>' . PHP_EOL;
+    }
+
+    $output .= str_repeat('    ', $depth) . '</ul>' . PHP_EOL;
+
+    return $output;
+}
+
+echo generateFolderList($folders, 0, null, $currentFolder);

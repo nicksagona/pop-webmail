@@ -1,0 +1,78 @@
+<?php include __DIR__ . '/../inc/functions.php'; ?>
+<?php include __DIR__ . '/inc/filters.php'; ?>
+<?php include __DIR__ . '/../inc/header-no-nav.phtml'; ?>
+    <div class="container-fluid main-dashboard">
+        <div class="col-md-12">
+            <div class="mail-nav">
+                <a class="btn-md btn-secondary" title="Close" href="#" onclick="window.close(); return false;"><i class="fa fa-close fa-lg"></i></a>
+                <a class="btn-md btn-secondary" title="Print" href="#" onclick="window.print(); return false;"><i class="fa fa-print fa-lg"></i></a>
+                <a class="btn-md btn-secondary" title="Forward" href="/mail/compose?id=<?=$id; ?>&action=forward"><i class="material-icons icon-sm">forward</i></a>
+                <a class="btn-md btn-secondary" title="Reply All" href="/mail/compose?id=<?=$id; ?>&action=reply_all"><i class="material-icons icon-sm">reply_all</i></a>
+                <a class="btn-md btn-secondary" title="Reply" href="/mail/compose?id=<?=$id; ?>&action=reply"><i class="material-icons icon-sm">reply</i></a>
+            </div>
+            <table class="table mail-table" cellpadding="0" cellspacing="0" border="0">
+                <thead>
+                    <tr><th colspan="2"><h3 class="title-header clear-both"><?=$title;?></h3></th></tr>
+                </thead>
+                <tbody>
+
+                    <tr>
+                        <td>
+                            <strong>To:</strong>
+                        </td>
+                        <td><?php
+$toAddresses = [];
+foreach ($message->headers->to as $to):
+    if (isset($to->personal)):
+        $toAddresses[] = '<a href="/mail/compose?id=' . $id . '&to=' . $to->mailbox . '@' . $to->host . '">' . $to->personal . ' &lt;' . $to->mailbox . '@' . $to->host . '&gt;</a>';
+    else:
+        $toAddresses[] = '<a href="/mail/compose?id=' . $id . '&to=' . $to->mailbox . '@' . $to->host . '">' . $to->mailbox . '@' . $to->host . '</a>';
+    endif;
+endforeach;
+echo implode(', ', $toAddresses);
+?></td>
+                    </tr>
+<?php if (isset($message->headers->cc) && (count($message->headers->cc) > 0)): ?>
+                    <tr>
+                        <td>
+                            <strong>CC:</strong>
+                        </td>
+                        <td><?php
+$ccAddresses = [];
+foreach ($message->headers->cc as $cc):
+    if (isset($cc->personal)):
+        $ccAddresses[] = '<a href="/mail/compose?id=' . $id . '&to=' . $cc->mailbox . '@' . $cc->host . '">' . $cc->personal . ' &lt;' . $cc->mailbox . '@' . $cc->host . '&gt;</a>';
+    else:
+        $ccAddresses[] = '<a href="/mail/compose?id=' . $id . '&to=' . $cc->mailbox . '@' . $cc->host . '">' . $cc->mailbox . '@' . $cc->host . '</a>';
+    endif;
+endforeach;
+echo implode(', ', $ccAddresses);
+?></td>
+                    </tr>
+<?php endif; ?>
+                    <tr>
+                        <td>
+                            <strong>From:</strong>
+                        </td>
+                        <td><a href="/mail/compose?id=<?=$id . '&to=' . $message->headers->from[0]->mailbox . '@' . $message->headers->from[0]->host; ?>"><?=htmlentities($message->headers->fromaddress, ENT_QUOTES, 'UTF-8'); ?></a></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Received:</strong></td>
+                        <td><?=date('m/d/y g:i A', strtotime($message->headers->date)); ?></td>
+                    </tr>
+<?php if (($message->hasAttachments) && ($acl->isAllowedMany($user->role_names, 'mail', 'attachments'))): ?>
+                    <tr>
+                        <td><strong>Attachments:</strong></td>
+                        <td><?=implode('; ', getAttachments($message->parts, $id)); ?></td>
+                    </tr>
+<?php endif; ?>
+                    <tr>
+                        <td colspan="2">
+<?=getContent($message->parts); ?>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+<?php include __DIR__ . '/../inc/no-footer.phtml'; ?>

@@ -1,0 +1,22 @@
+<?php include __DIR__ . '/../inc/functions.php'; ?>
+<?php include __DIR__ . '/inc/filters.php'; ?>
+<?php include __DIR__ . '/../inc/header-no-nav.phtml'; ?>
+    <div class="container-fluid main-dashboard">
+        <div class="mail-nav">
+            <a class="btn-md btn-secondary" title="Close" href="#" onclick="pab.closeMail(); return false;"><i class="fa fa-close fa-lg"></i></a>
+<?php if (isset($id)): ?>
+            <a class="btn-md btn-secondary" title="Back" href="/mail/<?=$id; ?>"><i class="fa fa-arrow-left fa-lg"></i></a>
+<?php endif; ?>
+        </div>
+<?php if (isset($sent)): ?>
+        <div class="alert alert-success mail-sent">
+            <h3 class="title-header text-center"><i class="material-icons">email</i>Your message has been sent. <i class="material-icons">done</i></h3>
+        </div>
+<?php else: ?>
+        <h3 class="title-header"><?=$title; ?></h3>
+<?=$form; ?>
+        <div id="dropzone" class="dropzone" data-folder="<?=$folder; ?>">
+        </div>
+<?php endif; ?>
+    </div>
+<?php include __DIR__ . '/../inc/no-footer.phtml'; ?>

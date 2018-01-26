@@ -37,6 +37,9 @@ class IndexController extends AbstractController
     {
         $this->prepareView('login.phtml');
         $this->view->title = 'Please Login';
+        $this->view->form  = Form\Login::createFromFieldsetConfig(
+            $this->application->config()['forms']['PopWebmail\Form\Login']
+        );
         $this->send();
     }
 

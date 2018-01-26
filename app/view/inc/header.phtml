@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<!-- Header //-->
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title><?=$title; ?> : Pop Webmail</title>
+
+    <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Source+Sans+Pro:400,300,300italic,400italic,700,700italic,900,900italic" />
+    <link rel="stylesheet" type="text/css" href="/assets/app.css" />
+    <link type="image/png" rel="shortcut icon" href="/assets/img/popwebmail-icon.png"  />
+
+</head>
+
+<body class="main">
+<?php if (isset($user)): ?>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top top-nav">
+        <a class="home" href="/">Pop Webmail</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+<?php include 'user-nav.phtml'; ?>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul id="pop-top-nav" class="navbar-nav mr-auto main-nav">
+                <li>
+                    <a href="/orders" title="Orders"><i class="material-icons">find_in_page</i><span>Orders</span></a>
+                    <ul>
+                        <li>
+                            <a href="/orders/search">Search</a>
+                        </li>
+                        <li>
+                            <a href="/orders/create">Create</a>
+                        </li>
+                        <li>
+                            <a href="/orders/submit">Submit</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+<?php endif; ?>

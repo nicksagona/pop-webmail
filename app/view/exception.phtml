@@ -1,2 +1,8 @@
-Exception
-<?=$message; ?>
+<?php include 'inc/header.phtml'; ?>
+    <div class="container-fluid main-dashboard">
+        <div class="col-md-12">
+            <h1 class="title-header error"><i class="material-icons header-icon">error_outline</i> Error</h1>
+            <p><?=$message; ?></p>
+        </div>
+    </div>
+<?php include 'inc/footer.phtml'; ?>
