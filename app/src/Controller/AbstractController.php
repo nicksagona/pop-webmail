@@ -182,6 +182,10 @@ abstract class AbstractController extends \Pop\Controller\AbstractController
     protected function prepareView($template)
     {
         $this->view = new View($this->viewPath . '/' . $template);
+
+        if (isset($this->application->services['session']->user)) {
+            $this->view->user = $this->application->services['session']->user;
+        }
     }
 
 }

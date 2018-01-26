@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "42619d01228bda4de996ca85776c151a",
+    "content-hash": "a9ed3e035eede054d6023e5ea6a28faa",
     "packages": [
         {
             "name": "popphp/pop-cookie",
@@ -55,6 +55,66 @@
                 "pop php"
             ],
             "time": "2017-12-29T18:19:58+00:00"
+        },
+        {
+            "name": "popphp/pop-db",
+            "version": "4.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/popphp/pop-db.git",
+                "reference": "7addb84c747839a7b7a1d78dc46e215f7f0209fe"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/popphp/pop-db/zipball/7addb84c747839a7b7a1d78dc46e215f7f0209fe",
+                "reference": "7addb84c747839a7b7a1d78dc46e215f7f0209fe",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "5.5.*"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "4.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Pop\\Db\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "New BSD"
+            ],
+            "authors": [
+                {
+                    "name": "Nick Sagona",
+                    "email": "dev@nolainteractive.com",
+                    "homepage": "http://www.nolainteractive.com/"
+                }
+            ],
+            "description": "Pop Db Component for Pop PHP Framework",
+            "homepage": "http://www.popphp.org/",
+            "keywords": [
+                "SQL Builder",
+                "database",
+                "database migrations",
+                "mysql",
+                "pdo",
+                "php",
+                "pop",
+                "pop php",
+                "postgresql",
+                "schema builder",
+                "sqlite",
+                "sqlsrv"
+            ],
+            "time": "2018-01-12T20:36:36+00:00"
         },
         {
             "name": "popphp/pop-dir",

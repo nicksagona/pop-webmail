@@ -1,6 +1,6 @@
-/app/config/mail/imap.php
-/app/config/mail/smtp.php
 /logs
+/app/config/database/sqlite.php
+/data/.htpopwebmail.sqlite
 /vendor
 /public/assets/fonts
 /public/assets/app.*

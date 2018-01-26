@@ -14,6 +14,7 @@
 namespace PopWebmail\Controller;
 
 use PopWebmail\Form;
+use PopWebmail\Model;
 
 /**
  * Index controller class
@@ -45,11 +46,35 @@ class IndexController extends AbstractController
      */
     public function login()
     {
+        if (isset($this->application->services['session']->user)) {
+            $this->redirect('/mail');
+        }
+
         $this->prepareView('login.phtml');
         $this->view->title = 'Please Login';
         $this->view->form  = Form\Login::createFromFieldsetConfig(
             $this->application->config()['forms']['PopWebmail\Form\Login']
         );
+
+        if ($this->request->isPost()) {
+            $this->view->form->addFilter('strip_tags')
+                ->addFilter('htmlentities', [ENT_QUOTES, 'UTF-8', false])
+                ->setFieldValues($this->request->getPost());
+
+            $user = new Model\User();
+
+            if ($user->authenticate($this->view->form->username, $this->view->form->password)) {
+                $user->login(
+                    $user->id,
+                    $this->application->services['session'],
+                    $this->application->services['cookie']
+                );
+                $this->redirect('/mail');
+            } else {
+                $this->view->error = 'Login Failed.';
+            }
+        }
+
         $this->send();
     }
 
@@ -60,6 +85,11 @@ class IndexController extends AbstractController
      */
     public function logout()
     {
+        $user = new Model\User();
+        $user->logout(
+            $this->application->services['session'],
+            $this->application->services['cookie']
+        );
         $this->redirect('/login');
     }
 

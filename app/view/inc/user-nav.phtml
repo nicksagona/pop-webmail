@@ -3,6 +3,6 @@
             <li><a href="/logout" title="Logout"><i class="material-icons">exit_to_app</i></a></li>
         </ul>
         <div class="logged-in">
-            <h5><a href="/profile"><?=$user->username; ?></a></h5>
+            <h5><a href="/profile"><?=$user['username']; ?></a></h5>
             <p><?=date('M j Y g:i A'); ?></p>
         </div>

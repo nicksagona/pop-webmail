@@ -305,9 +305,10 @@ a.home {
   height: 60px;
   text-indent: -9999px;
   overflow: hidden;
-  background-image: $logo-image;
-  background-position: center -8px;
+  background-image: url($logo-image);
+  background-position: center -10px;
   background-repeat: no-repeat;
+  background-size: 80px 80px;
 }
 
 .user-nav {

@@ -5,6 +5,7 @@
 
 return [
     'routes'         => include 'routes/http.php',
+    'database'       => include 'database/sqlite.php',
     'forms'          => include 'forms.php',
     'pagination'     => 25,
     'services'       => [
