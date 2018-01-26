@@ -54,8 +54,6 @@ class Module extends \Pop\Module\Module
     {
         parent::register($application);
 
-        //$this->initMail();
-
         if (null !== $this->application->router()) {
             $this->application->router()->addControllerParams(
                 '*', [
@@ -94,52 +92,6 @@ class Module extends \Pop\Module\Module
 
         $response->send(500);
         exit();
-    }
-
-
-
-    /**
-     * Initialize mail services
-     *
-     * @return void
-     */
-    protected function initMail()
-    {
-        $this->application->services->set('mailer_transport', [
-            'call'   => 'Pop\Mail\Transport\Smtp',
-            'params' => [
-                'host' => $this->application->config['mail']['smtp']['host'],
-                'port' => $this->application->config['mail']['smtp']['port']
-            ]
-        ]);
-
-        $this->application->services()->set('mailer', [
-            'call' => function($application) {
-                $transport = $application->services->get('mailer_transport');
-                $transport->setUsername($application->config['mail']['smtp']['username'])
-                    ->setPassword($application->config['mail']['smtp']['password']);
-                $transport->setEncryption($application->config['mail']['smtp']['security']);
-
-                return new Mail\Mailer($transport);
-            },
-            'params' => [$this->application]
-        ]);
-
-        $this->application->services()->set('imap', [
-            'call' => function($application) {
-                $imap = new Mail\Client\Imap(
-                    $application->config['mail']['imap']['host'], $application->config['mail']['imap']['port']
-                );
-
-                $imap->setUsername($application->config['mail']['imap']['username'])
-                    ->setPassword($application->config['mail']['imap']['password'])
-                    ->setFolder($application->config['mail']['imap']['folder'])
-                    ->open('/ssl');
-
-                return $imap;
-            },
-            'params' => [$this->application]
-        ]);
     }
 
 }
