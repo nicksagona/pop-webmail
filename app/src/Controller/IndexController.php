@@ -78,6 +78,50 @@ class IndexController extends AbstractController
         $this->send();
     }
 
+
+
+    /**
+     * Profile action method
+     *
+     * @return void
+     */
+    public function profile()
+    {
+        $this->prepareView('profile.phtml');
+        $this->view->title = 'My Profile';
+        $this->view->form  = Form\Profile::createFromFieldsetConfig(
+            $this->application->config()['forms']['PopWebmail\Form\Profile']
+        );
+
+        $this->view->form->addFilter('strip_tags')
+            ->addFilter('htmlentities', [ENT_QUOTES, 'UTF-8', false]);
+
+        $user = new Model\User();
+
+        if ($this->request->isPost()) {
+            $this->view->form->setFieldValues($this->request->getPost())
+                ->addValidators();
+
+            if ($this->view->form->isValid()) {
+                $this->view->form->clearFilters()
+                    ->addFilter('html_entity_decode', [ENT_QUOTES, 'UTF-8'])
+                    ->filterValues();
+
+                $this->application->services['session']->user['username'] = $this->view->form->username;
+
+                $user = new Model\User();
+                $user->update($this->view->form->toArray());
+                $this->application->services['session']->setRequestValue('saved', true);
+                $this->redirect('/profile');
+            }
+        } else {
+            $userData = $user->getById($this->application->services['session']->user['id']);
+            $this->view->form->setFieldValues($userData);
+        }
+
+        $this->send();
+    }
+
     /**
      * Logout action method
      *

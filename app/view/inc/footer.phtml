@@ -1,6 +1,8 @@
     <footer class="footer">
         <div>Pop Webmail v<?=\PopWebmail\Module::VERSION; ?>. &copy; <?=date('Y'); ?> <a href="https://www.nolainteractive.com/" target="_blank">NOLA Interactive</a>. All Rights Reserved.</div>
     </footer>
+    <div id="saved" class="alert alert-success" role="alert"<?=(isset($saved) ? ' data-saved="1"' : null); ?>>Saved</div>
+    <div id="removed" class="alert alert-danger" role="alert"<?=(isset($removed) ? ' data-removed="1"' : null); ?>>Removed</div>
     <script src="/assets/app.js"></script>
 </body>
 

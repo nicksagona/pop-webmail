@@ -184,4 +184,14 @@ $(document).ready(function(){
             return confirm('This action cannot be undone. Are you sure?');
         });
     }
+    if ($('#saved').data('saved') == 1) {
+        $('#saved').fadeIn({complete : function(){
+            $('#saved').delay(2000).fadeOut();
+        }});
+    }
+    if ($('#removed').data('removed') == 1) {
+        $('#removed').fadeIn({complete : function(){
+            $('#removed').delay(2000).fadeOut();
+        }});
+    }
 });

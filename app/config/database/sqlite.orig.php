@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'adapter'  => '',
-    'database' => '',
+    'adapter'  => 'sqlite',
+    'database' => __DIR__ . '/../../../data/.htpopwebmail.sqlite',
     'type'     => ''
 ];

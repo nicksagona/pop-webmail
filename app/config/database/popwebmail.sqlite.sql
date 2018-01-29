@@ -43,6 +43,7 @@ INSERT INTO "users" ("username", "password") VALUES ('admin', '$2y$08$ckh6UXNYdj
 DROP TABLE IF EXISTS "accounts";
 CREATE TABLE IF NOT EXISTS "accounts" (
   "id" integer NOT NULL PRIMARY KEY AUTOINCREMENT,
+  "name" varchar,
   "imap_host" varchar,
   "imap_port" varchar,
   "imap_username" varchar,
@@ -52,6 +53,7 @@ CREATE TABLE IF NOT EXISTS "accounts" (
   "smtp_username" varchar,
   "smtp_password" varchar,
   "smtp_security" varchar,
+  "default" integer,
   UNIQUE ("id")
 ) ;
 

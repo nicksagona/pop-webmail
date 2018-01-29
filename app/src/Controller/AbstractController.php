@@ -185,6 +185,13 @@ abstract class AbstractController extends \Pop\Controller\AbstractController
 
         if (isset($this->application->services['session']->user)) {
             $this->view->user = $this->application->services['session']->user;
+
+            if (isset($this->application->services['session']->saved)) {
+                $this->view->saved = true;
+            }
+            if (isset($this->application->services['session']->removed)) {
+                $this->view->removed = true;
+            }
         }
     }
 

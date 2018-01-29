@@ -81,4 +81,48 @@ class User extends AbstractModel
         $session->kill();
     }
 
+    /**
+     * Get user by id
+     *
+     * @param  int $id
+     * @return array
+     */
+    public function getById($id)
+    {
+        $userData = [];
+        $user     = Table\Users::findById($id);
+
+        if (isset($user->id)) {
+            $userData = $user->toArray();
+        }
+
+        return $userData;
+    }
+
+
+
+    /**
+     * Update user
+     *
+     * @param  array $data
+     * @return array
+     */
+    public function update(array $data)
+    {
+        $user     = Table\Users::findById($data['id']);
+        $userData = [];
+
+        if (isset($user->id)) {
+            $user->username   = (!empty($data['username'])) ? $data['username'] : $user->username;
+            $user->password   = (!empty($data['password'])) ? password_hash($data['password'], PASSWORD_BCRYPT) : $user->password;
+            $user->email      = (!empty($data['email'])) ? $data['email'] : $user->email;
+            $user->save();
+
+            $userData = $user->toArray();
+            unset($userData['password']);
+        }
+
+        return $userData;
+    }
+
 }

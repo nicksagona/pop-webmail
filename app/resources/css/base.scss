@@ -316,7 +316,7 @@ a.home {
   margin: 0 5px 0 5px;
   padding: 0;
   float: right;
-  width: 120px;
+  width: 80px;
   height: 60px;
   overflow: hidden;
 }
@@ -340,10 +340,6 @@ a.home {
   height: 60px;
   font-size: 0.825em;
   line-height: 1.0em;
-}
-
-.user-nav > li:first-child > a {
-  padding: 20px 0 0 0;
 }
 
 .user-nav > li > a > i {
@@ -819,6 +815,68 @@ select#search_by {
   float: right;
   display: block;
   font-size: 0.825em;
+}
+
+#saved {
+  position: fixed;
+  z-index: 10000;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: none;
+  margin: auto;
+  padding: 20px 15px 15px 15px;
+  font-weight: bold;
+  text-align: right;
+  width: 20%;
+  min-width: 200px;
+  height: 60px;
+  background-image: linear-gradient(to bottom, #B7E0A6 0px, #91CE77 100%);
+  background-repeat: repeat-x;
+  border-color: #6D9B58;
+  box-shadow: 0 0 6px 3px #bcbcbc;
+}
+
+#saved:after {
+  font-family: "FontAwesome";
+  font-weight: normal;
+  content: "\f00c";
+  margin: 0;
+  padding: 0 0 0 5px;
+  color: #5f8700;
+  font-size: 1.1em;
+}
+
+#removed {
+  position: fixed;
+  z-index: 10000;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: none;
+  margin: auto;
+  padding: 20px 15px 15px 15px;
+  font-weight: bold;
+  text-align: right;
+  width: 20%;
+  min-width: 200px;
+  height: 60px;
+  background-image: linear-gradient(to bottom, #E5C0C0 0px, #DB9292 100%);
+  background-repeat: repeat-x;
+  border-color: #CC7070;
+  box-shadow: 0 0 6px 3px #bcbcbc;
+}
+
+#removed:after {
+  font-family: "FontAwesome";
+  font-weight: normal;
+  content: "\f00d";
+  margin: 0;
+  padding: 0 0 0 5px;
+  color: #9c0000;
+  font-size: 1.1em;
 }
 
 @media (max-width: 1600px) {
