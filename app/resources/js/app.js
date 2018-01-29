@@ -2,10 +2,11 @@
  * app.js
  */
 
-window.$ = window.jQuery = jquery = require('jquery');
-var dropzone = require('dropzone');
-var popper = require('popper.js');
-var bootstrap = require('bootstrap');
+var jquery = require('jquery');
 
-require('./base.js');
+// var popper = require('popper.js');
+// var bootstrap = require('bootstrap');
+
 require('./mail.js');
+
+window.$ = window.jQuery = jquery;

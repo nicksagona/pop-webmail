@@ -195,3 +195,5 @@ $(document).ready(function(){
         }});
     }
 });
+
+module.exports = pop;
