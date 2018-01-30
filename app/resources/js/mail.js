@@ -1,6 +1,6 @@
-var pop = require('./pop.js');
-var Dropzone = require('dropzone');
-
+/**
+ * mail.js
+ */
 pop.toggleMailFolder = function(a) {
     if ($(a).next().css('display') == 'none') {
         $(a).next().show();

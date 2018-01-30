@@ -1,7 +1,6 @@
 /**
- * base.js
+ * pop.js
  */
-
 var pop = {
     cookie : {
         /** Function to save a cookie */
