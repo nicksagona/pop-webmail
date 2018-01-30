@@ -78,6 +78,12 @@ class Account extends AbstractModel
 
         if (isset($account->id)) {
             $accountData = $account->toArray();
+            if (!empty($accountData['imap_password'])) {
+                $accountData['imap_password'] = base64_decode($accountData['imap_password']);
+            }
+            if (!empty($accountData['smtp_password'])) {
+                $accountData['smtp_password'] = base64_decode($accountData['smtp_password']);
+            }
         }
 
         return $accountData;
@@ -92,7 +98,17 @@ class Account extends AbstractModel
     public function create(array $data)
     {
         $account = new Table\Accounts([
-            'name' => html_entity_decode(strip_tags($data['name']), ENT_QUOTES, 'UTF-8')
+            'name'          => html_entity_decode(strip_tags($data['name']), ENT_QUOTES, 'UTF-8'),
+            'imap_host'     => (!empty($data['imap_host'])) ? $data['imap_host'] : null,
+            'imap_port'     => (!empty($data['imap_port'])) ? $data['imap_port'] : null,
+            'imap_username' => (!empty($data['imap_username'])) ? $data['imap_username'] : null,
+            'imap_password' => (!empty($data['imap_password'])) ? base64_encode($data['imap_password']) : null,
+            'smtp_host'     => (!empty($data['smtp_host'])) ? $data['smtp_host'] : null,
+            'smtp_port'     => (!empty($data['smtp_port'])) ? $data['smtp_port'] : null,
+            'smtp_username' => (!empty($data['smtp_username'])) ? $data['smtp_username'] : null,
+            'smtp_password' => (!empty($data['smtp_password'])) ? base64_encode($data['smtp_password']) : null,
+            'smtp_security' => (!empty($data['smtp_security'])) ? $data['smtp_security'] : null,
+            'default'       => (!empty($data['default'])) ? 1 : 0
         ]);
         $account->save();
 
@@ -111,7 +127,17 @@ class Account extends AbstractModel
         $accountData = [];
 
         if (isset($account->id)) {
-            $account->name  = (!empty($data['name'])) ? html_entity_decode(strip_tags($data['name']), ENT_QUOTES, 'UTF-8') : $account->name;
+            $account->name          = (!empty($data['name'])) ? html_entity_decode(strip_tags($data['name']), ENT_QUOTES, 'UTF-8') : $account->name;
+            $account->imap_host     = (!empty($data['imap_host'])) ? $data['imap_host'] : $account->imap_host;
+            $account->imap_port     = (!empty($data['imap_port'])) ? $data['imap_port'] : $account->imap_port;
+            $account->imap_username = (!empty($data['imap_username'])) ? $data['imap_username'] : $account->imap_username;
+            $account->imap_password = (!empty($data['imap_password'])) ? base64_encode($data['imap_password']) : $account->imap_password;
+            $account->smtp_host     = (!empty($data['smtp_host'])) ? $data['smtp_host'] : $account->smtp_host;
+            $account->smtp_port     = (!empty($data['smtp_port'])) ? $data['smtp_port'] : $account->smtp_port;
+            $account->smtp_username = (!empty($data['smtp_username'])) ? $data['smtp_username'] : $account->smtp_username;
+            $account->smtp_password = (!empty($data['smtp_password'])) ? base64_encode($data['smtp_password']) : $account->smtp_password;
+            $account->smtp_security = (!empty($data['smtp_security'])) ? $data['smtp_security'] : $account->smtp_security;
+            $account->default       = (!empty($data['imap_host'])) ? 1 : $account->default;
             $account->save();
 
             $accountData = $account->toArray();
@@ -142,6 +168,27 @@ class Account extends AbstractModel
                 $account->delete();
             }
         }
+    }
+
+    /**
+     * Determine if accounts have pages
+     *
+     * @param  int $limit
+     * @return boolean
+     */
+    public function hasPages($limit)
+    {
+        return (Table\Accounts::getTotal() > $limit);
+    }
+
+    /**
+     * Get count of accounts
+     *
+     * @return int
+     */
+    public function getCount()
+    {
+        return Table\Accounts::getTotal();
     }
 
 }

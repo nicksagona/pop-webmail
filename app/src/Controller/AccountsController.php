@@ -15,6 +15,7 @@ namespace PopWebmail\Controller;
 
 use PopWebmail\Form;
 use PopWebmail\Model;
+use Pop\Paginator;
 
 /**
  * Accounts controller class
@@ -36,13 +37,18 @@ class AccountsController extends AbstractController
      */
     public function index()
     {
+        $account = new Model\Account();
+        $page    = (null !== $this->request->getQuery('page')) ? (int)$this->request->getQuery('page') : 1;
+        $limit   = $this->application->config['pagination'];
+        $sort    = (null !== $this->request->getQuery('sort')) ? $this->request->getQuery('sort') : null;
+
         $this->prepareView('mail/accounts/index.phtml');
-        $this->view->title = 'Accounts';
-        $this->view->pages = null;
+        $this->view->title    = 'Accounts';
+        $this->view->accounts = $account->getAll($page, $limit, $sort);
+        $this->view->pages    = ($account->hasPages($limit)) ? new Paginator\Form($account->getCount(), $limit) : null;
         $this->send();
+
     }
-
-
 
     /**
      * Create action method
@@ -52,16 +58,17 @@ class AccountsController extends AbstractController
     public function create()
     {
         $this->prepareView('mail/accounts/create.phtml');
-        $this->view->title = 'Account : Add';
+        $this->view->title = 'Accounts : Add';
 
-        $this->view->form = Form\Mail\Account::createFromFieldsetConfig($this->application->config['forms']['PopWebmail\Form\Mail\Account']);
+        $this->view->form = Form\Mail\Account::createFromFieldsetConfig(
+            $this->application->config['forms']['PopWebmail\Form\Mail\Account']
+        );
         $this->view->form->addColumn([1, 2, 3], 'form-left-column')
             ->addColumn(4, 'form-right-column');
 
         if ($this->request->isPost()) {
             $this->view->form->addFilter('strip_tags')
-                ->setFieldValues($this->request->getPost())
-                ->addValidators();
+                ->setFieldValues($this->request->getPost());
 
             if ($this->view->form->isValid()) {
                 $this->view->form->clearFilters()
@@ -87,42 +94,33 @@ class AccountsController extends AbstractController
      */
     public function update($id)
     {
-        $user = (new Model\Account())->getById($id);
+        $account = (new Model\Account())->getById($id);
         $this->prepareView('mail/accounts/update.phtml');
-        $this->view->title = 'Users : ' . $user['username'];
+        $this->view->title = 'Accounts : ' . $account['name'];
 
-        if (null !== $this->request->getQuery('role_id')) {
-            $this->view->roleId = (int)$this->request->getQuery('role_id');
-        }
-
-        $roles  = (new Users\Model\Role())->getAll(null, null);
-        $fields = $this->application->config['forms']['Pab\Http\Web\Form\User'];
-        foreach ($roles as $role) {
-            $fields[3]['role_ids']['values'][$role['id']] = $role['name'];
-        }
-
-        $this->view->form = Form\User::createFromFieldsetConfig($fields);
+        $this->view->form = Form\Mail\Account::createFromFieldsetConfig(
+            $this->application->config['forms']['PopWebmail\Form\Mail\Account']
+        );
         $this->view->form->addColumn([1, 2, 3], 'form-left-column')
             ->addColumn(4, 'form-right-column');
 
         if ($this->request->isPost()) {
             $this->view->form->addFilter('strip_tags')
-                ->setFieldValues($this->request->getPost())
-                ->addValidators();
+                ->setFieldValues($this->request->getPost());
 
             if ($this->view->form->isValid()) {
                 $this->view->form->clearFilters()
                     ->addFilter('html_entity_decode', [ENT_QUOTES, 'UTF-8'])
                     ->filterValues();
 
-                $user = new Model\Account();
-                $user->update($this->view->form->toArray());
+                $account = new Model\Account();
+                $account->update($this->view->form->toArray());
                 $this->application->services['session']->setRequestValue('saved', true);
-                $this->redirect('/users/' . $id);
+                $this->redirect('/mail/accounts/' . $id);
             }
         } else {
             $this->view->form->addFilter('htmlentities', [ENT_QUOTES, 'UTF-8', false])
-                ->setFieldValues($user);
+                ->setFieldValues($account);
         }
 
         $this->send();
@@ -136,14 +134,12 @@ class AccountsController extends AbstractController
      */
     public function delete()
     {
-        if ($this->request->isPost() && !empty($this->request->getPost('rm_users'))) {
-            $user = new Model\Account();
-            $user->delete($this->request->getPost('rm_users'));
+        if ($this->request->isPost() && !empty($this->request->getPost('rm_accounts'))) {
+            $account = new Model\Account();
+            $account->delete($this->request->getPost('rm_accounts'));
             $this->application->services['session']->setRequestValue('removed', true);
-            $this->redirect(
-                '/users' . ((null !== $this->request->getQuery('role_id')) ? '?role_id=' . (int)$this->request->getQuery('role_id') : null)
-            );
         }
+        $this->redirect('/mail/accounts');
     }
     
 }
