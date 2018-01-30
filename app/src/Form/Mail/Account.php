@@ -11,10 +11,10 @@
 /**
  * @namespace
  */
-namespace PopWebmail\Form;
+namespace PopWebmail\Form\Mail;
 
 /**
- * Compose form class
+ * Account form class
  *
  * @category   PopWebmail
  * @package    PopWebmail
@@ -23,7 +23,7 @@ namespace PopWebmail\Form;
  * @copyright  Copyright (c) 2009-2018 NOLA Interactive, LLC. (http://www.nolainteractive.com)
  * @version    0.0.1-alpha
  */
-class Compose extends \Pop\Form\Form
+class Account extends \Pop\Form\Form
 {
 
     /**
@@ -38,8 +38,8 @@ class Compose extends \Pop\Form\Form
     public function __construct(array $fields = null, $action = null, $method = 'post')
     {
         parent::__construct($fields, $action, $method);
-        $this->setAttribute('class', 'compose-form');
-        $this->setAttribute('id', 'compose-form');
+        $this->setAttribute('class', 'data-form');
+        $this->setAttribute('id', 'account-form');
     }
 
 }

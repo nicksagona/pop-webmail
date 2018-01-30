@@ -99,8 +99,6 @@ class User extends AbstractModel
         return $userData;
     }
 
-
-
     /**
      * Update user
      *

@@ -652,6 +652,47 @@ a.home {
   padding: 0;
 }
 
+.form-left-column {
+  margin: 0;
+  padding: 0 30px 0 0;
+  width: calc(100% - 210px);
+  float: left;
+  border-right: solid 1px $table-head-border-color;
+}
+
+.form-right-column {
+  position: relative;
+  margin: 28px 0 0 30px;
+  padding: 50px 0 0 0;
+  width: 180px;
+  float: right;
+}
+
+.form-right-column > fieldset:last-child {
+  position: absolute;
+  display: block;
+  margin: 0;
+  padding: 50px 0 0 0;
+  width: 100%;
+  top: 0;
+}
+
+.form-right-column > fieldset:last-child > dl:last-child > dd:last-child {
+  position: absolute;
+  display: block;
+  width: 100%;
+  top: 0;
+}
+/*
+div.form-right-column > fieldset:first-child > dl > dt {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  padding-top: 5px;
+  padding-bottom: 0;
+  border-bottom: dotted 1px #ccc;
+}
+*/
+
 .nav-top-pad {
   margin: 6px 0 0 0;
 }
@@ -1006,6 +1047,45 @@ select#search_by {
 
   .main-nav > li > ul > li:hover > ul {
     display: none;
+  }
+
+  .form-left-column {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    float: none;
+    overflow: auto;
+    border-right: none;
+  }
+
+  .form-right-column {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    float: none;
+    overflow: auto;
+  }
+
+  .form-right-column > fieldset:last-child {
+    position: relative;
+    top: auto;
+  }
+
+  .form-right-column > fieldset:last-child {
+    position: relative;
+    display: block;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    top: auto;
+  }
+
+  .form-right-column > fieldset:last-child > dl:last-child > dd:last-child {
+    position: relative;
+    display: block;
+    width: 100%;
+    padding: 20px 0 0 0;
+    top: auto;
   }
 
   .msg-num {
