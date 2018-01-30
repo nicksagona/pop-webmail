@@ -86,6 +86,8 @@ class Account extends AbstractModel
             }
         }
 
+        $this->data = array_merge($this->data, $accountData);
+
         return $accountData;
     }
 

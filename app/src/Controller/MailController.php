@@ -36,7 +36,7 @@ class MailController extends AbstractController
     public function index()
     {
         $this->prepareView('mail/index.phtml');
-        $this->view->title    = 'Mail';
+        $this->view->title    = '';
         $this->view->pages    = null;
         $this->view->accounts = (new Model\Account())->getAll();
 
@@ -49,7 +49,26 @@ class MailController extends AbstractController
             }
         }
 
-        $this->view->currentAccountId = $this->application->services['session']->currentAccountId;
+        $mail = new Model\Mail();
+        $mail->loadAccount($this->application->services['session']->currentAccountId);
+
+        if ($mail->isImapLoaded()) {
+            if (null !== $this->request->getQuery('folder')) {
+                $currentFolder = $this->request->getQuery('folder');
+                $mail->setFolder($currentFolder)->open('/ssl');
+            } else {
+                $currentFolder = 'INBOX';
+            }
+            $this->application->services['session']->currentFolder = $currentFolder;
+            $this->view->currentAccountId = $this->application->services['session']->currentAccountId;
+
+            if (!isset($this->application->services['session']->imapFolders)) {
+                $this->application->services['session']->imapFolders = $mail->getFolders();
+            }
+            $this->view->imapFolders   = $this->application->services['session']->imapFolders;
+            $this->view->currentFolder = $currentFolder;
+            $this->view->title        .= $currentFolder;
+        }
 
         $this->send();
     }

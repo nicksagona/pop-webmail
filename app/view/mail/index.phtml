@@ -15,16 +15,14 @@
                 <div class="page-links"><?=$pages; ?></div>
 <?php endif; ?>
             </div>
-            <p>Mail goes here.</p>
-<!--
             <div class="mail-div">
                 <div class="mail-folder-div">
+<?php include __DIR__ . '/inc/folders.phtml'; ?>
                 </div>
                 <div class="mail-list-div">
-                    <p>Mailbox index.</p>
+                    <p>Mailbox messages go here.</p>
                 </div>
             </div>
-//-->
 <?php else: ?>
             <p>There are currently no mail accounts set up. <a href="/mail/accounts/create">Add one here</a>.</p>
 <?php endif; ?>

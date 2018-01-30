@@ -21,5 +21,6 @@ function generateFolderList($folders, $depth = 0, $parent = null, $currentFolder
 
     return $output;
 }
-
-echo generateFolderList($folders, 0, null, $currentFolder);
+if (isset($imapFolders)):
+    echo generateFolderList($imapFolders, 0, null, $currentFolder);
+endif;
