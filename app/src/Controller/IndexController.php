@@ -78,8 +78,6 @@ class IndexController extends AbstractController
         $this->send();
     }
 
-
-
     /**
      * Profile action method
      *

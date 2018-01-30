@@ -1,12 +1,22 @@
 <?php include __DIR__ . '/../inc/header.phtml'; ?>
     <div class="container-fluid main-dashboard">
         <div class="col-md-12">
+<?php if (count($accounts) > 0): ?>
+            <select name="accounts_select" id="accounts_select" class="accounts-select">
+<?php foreach ($accounts as $account): ?>
+                <option value="<?=$account['id']; ?>"<?=($currentAccountId == $account['id']) ? ' selected="selected"' : ''; ?>><?=$account['name']; ?><?=($account['default']) ? ' (Default)' : ''?></option>
+<?php endforeach; ?>
+            </select>
+<?php endif; ?>
             <h1 class="title-header"><i class="material-icons header-icon">email</i> <?=$title;?></h1>
+<?php if (count($accounts) > 0): ?>
             <div class="clear-both">
 <?php if (null !== $pages): ?>
                 <div class="page-links"><?=$pages; ?></div>
 <?php endif; ?>
             </div>
+            <p>Mail goes here.</p>
+<!--
             <div class="mail-div">
                 <div class="mail-folder-div">
                 </div>
@@ -14,6 +24,10 @@
                     <p>Mailbox index.</p>
                 </div>
             </div>
+//-->
+<?php else: ?>
+            <p>There are current no mail accounts set up. <a href="/mail/accounts/create">Add one here</a>.</p>
+<?php endif; ?>
         </div>
     </div>
 <?php include __DIR__ . '/../inc/footer.phtml'; ?>

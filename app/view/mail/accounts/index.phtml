@@ -18,6 +18,7 @@ include __DIR__ . '/../../inc/header.phtml';
                         <tr>
                             <th><a href="?sort=<?=getSort('id') . getQuery('sort'); ?>">#</a></th>
                             <th><a href="?sort=<?=getSort('name') . getQuery('sort'); ?>">Name</a></th>
+                            <th class="text-center"><a href="?sort=<?=getSort('default') . getQuery('sort'); ?>">Default</a></th>
                             <th class="text-center">Edit</th>
                             <th class="rm-col text-center"><input type="checkbox" name="check_all" id="checkAll" data-name="rm_accounts" value="" /></th>
                         </tr>
@@ -27,6 +28,7 @@ include __DIR__ . '/../../inc/header.phtml';
                         <tr>
                             <td><?=$account['id']; ?></td>
                             <td><?=$account['name']; ?></td>
+                            <td class="text-center"><?=($account['default']) ? '<i class="fa fa-check"></i>' : '&nbsp;'; ?></td>
                             <td class="text-center"><a href="/mail/accounts/<?=$account['id']; ?>"><i class="fa fa-pencil fa-lg gray-link"></i></a></td>
                             <td class="rm-col text-center"><input type="checkbox" name="rm_accounts[]" value="<?=$account['id']; ?>" /></td>
                         </tr>

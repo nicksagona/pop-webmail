@@ -49,6 +49,10 @@ return [
         'controller' => 'PopWebmail\Controller\AccountsController',
         'action'     => 'delete'
     ],
+    '/mail/box/:id' => [
+        'controller' => 'PopWebmail\Controller\MailController',
+        'action'     => 'box'
+    ],
     '*' => [
         'controller' => 'PopWebmail\Controller\IndexController',
         'action'     => 'error'

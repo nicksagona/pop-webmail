@@ -1,6 +1,10 @@
 /**
  * mail.js
  */
+pop.changeMailbox = function() {
+    window.location.href = '/mail/box/' + $('#accounts_select').val();
+};
+
 pop.toggleMailFolder = function(a) {
     if ($(a).next().css('display') == 'none') {
         $(a).next().show();
@@ -35,6 +39,10 @@ pop.closeMail = function() {
 Dropzone.autoDiscover = false;
 
 $(document).ready(function(){
+    if ($('#accounts_select')[0] != undefined) {
+        $('#accounts_select').change(pop.changeMailbox);
+    }
+
     if ($('a.current-folder')[0] != undefined) {
         $('a.current-folder').parent().parent().show();
     }

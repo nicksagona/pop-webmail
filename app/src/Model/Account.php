@@ -97,6 +97,14 @@ class Account extends AbstractModel
      */
     public function create(array $data)
     {
+        if (!empty($data['default'])) {
+            $accounts = Table\Accounts::findAll();
+            foreach ($accounts as $acct) {
+                $acct->default = 0;
+                $acct->save();
+            }
+        }
+
         $account = new Table\Accounts([
             'name'          => html_entity_decode(strip_tags($data['name']), ENT_QUOTES, 'UTF-8'),
             'imap_host'     => (!empty($data['imap_host'])) ? $data['imap_host'] : null,
@@ -127,6 +135,14 @@ class Account extends AbstractModel
         $accountData = [];
 
         if (isset($account->id)) {
+            if (!empty($data['default'])) {
+                $accounts = Table\Accounts::findBy(['id!=' => $account->id]);
+                foreach ($accounts as $acct) {
+                    $acct->default = 0;
+                    $acct->save();
+                }
+            }
+
             $account->name          = (!empty($data['name'])) ? html_entity_decode(strip_tags($data['name']), ENT_QUOTES, 'UTF-8') : $account->name;
             $account->imap_host     = (!empty($data['imap_host'])) ? $data['imap_host'] : $account->imap_host;
             $account->imap_port     = (!empty($data['imap_port'])) ? $data['imap_port'] : $account->imap_port;

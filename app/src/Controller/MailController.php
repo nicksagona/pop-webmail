@@ -13,7 +13,7 @@
  */
 namespace PopWebmail\Controller;
 
-use PopWebmail\Form;
+use PopWebmail\Model;
 
 /**
  * Mail controller class
@@ -36,9 +36,34 @@ class MailController extends AbstractController
     public function index()
     {
         $this->prepareView('mail/index.phtml');
-        $this->view->title = 'Mail';
-        $this->view->pages = null;
+        $this->view->title    = 'Mail';
+        $this->view->pages    = null;
+        $this->view->accounts = (new Model\Account())->getAll();
+
+        if (!isset($this->application->services['session']->currentAccountId)) {
+            foreach ($this->view->accounts as $account) {
+                if ($account['default']) {
+                    $this->application->services['session']->currentAccountId = $account['id'];
+                    break;
+                }
+            }
+        }
+
+        $this->view->currentAccountId = $this->application->services['session']->currentAccountId;
+
         $this->send();
+    }
+
+    /**
+     * Box action method
+     *
+     * @param  int $id
+     * @return void
+     */
+    public function box($id)
+    {
+        $this->application->services['session']->currentAccountId = $id;
+        $this->redirect('/mail');
     }
 
 }
