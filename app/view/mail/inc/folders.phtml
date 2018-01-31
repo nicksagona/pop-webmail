@@ -1,5 +1,21 @@
 <?php
 
+function generateFolderOptions($folders, $depth = 0, $parent = null, $currentFolder) {
+    $depth++;
+
+    $output = '';
+    $indent = ($depth > 1) ? str_repeat('&nbsp;&nbsp;', $depth) . ' &gt; ' : '';
+
+    foreach($folders as $folderName => $folderContent) {
+        $url     = ($parent . $folderName != '[Gmail]') ? '/mail?folder=' . $parent . $folderName : '#';
+        $output .= '<option value="' . $url . '">' . $indent . $folderName . '</option>' . PHP_EOL;
+        if (!empty($folderContent['subfolders'])) {
+            $output .= generateFolderOptions($folderContent['subfolders'], $depth, $parent . $folderName . '/', $currentFolder);
+        }
+    }
+
+    return $output;
+}
 function generateFolderList($folders, $depth = 0, $parent = null, $currentFolder) {
     $depth++;
 
@@ -10,7 +26,7 @@ function generateFolderList($folders, $depth = 0, $parent = null, $currentFolder
         $url     = ($parent . $folderName != '[Gmail]') ? '/mail?folder=' . $parent . $folderName . '"' : '#" onclick="return false;"';
         $output .= str_repeat('    ', $depth) . '    <li><a href="' . $url . $current .
             '>' . '<i class="material-icons icon-sm">folder' . (($current != '') ? '_open' : '') . '</i>' . $folderName . '</a>' .
-            ((!empty($folderContent['subfolders'])) ? '<a href="#" onclick="return pab.toggleMailFolder(this);"><i class="material-icons icon-sm">expand_more</i></a>' : '');
+            ((!empty($folderContent['subfolders'])) ? '<a href="#" onclick="return pop.toggleMailFolder(this);"><i class="material-icons icon-sm">expand_more</i></a>' : '');
         if (!empty($folderContent['subfolders'])) {
             $output .= PHP_EOL . generateFolderList($folderContent['subfolders'], $depth, $parent . $folderName . '/', $currentFolder) . str_repeat('    ', $depth);
         }
@@ -21,6 +37,10 @@ function generateFolderList($folders, $depth = 0, $parent = null, $currentFolder
 
     return $output;
 }
+
 if (isset($imapFolders)):
+    echo '<select id="folder-select">' . PHP_EOL;
+    echo generateFolderOptions($imapFolders, 0, null, $currentFolder);
+    echo '</select>' . PHP_EOL;
     echo generateFolderList($imapFolders, 0, null, $currentFolder);
 endif;

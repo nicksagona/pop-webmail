@@ -14,6 +14,7 @@
 namespace PopWebmail\Controller;
 
 use PopWebmail\Model;
+use Pop\Paginator;
 
 /**
  * Mail controller class
@@ -35,8 +36,12 @@ class MailController extends AbstractController
      */
     public function index()
     {
+        $page    = (null !== $this->request->getQuery('page')) ? (int)$this->request->getQuery('page') : 1;
+        $limit   = $this->application->config['pagination'];
+        $sort    = (null !== $this->request->getQuery('sort')) ? (int)$this->request->getQuery('sort') : SORTDATE;
+        $reverse = (null !== $this->request->getQuery('order')) ? !($this->request->getQuery('order') != 'ASC') : true;
+
         $this->prepareView('mail/index.phtml');
-        $this->view->pages    = null;
         $this->view->accounts = (new Model\Account())->getAll();
 
         if (!isset($this->application->services['session']->currentAccountId)) {
@@ -67,8 +72,14 @@ class MailController extends AbstractController
             $this->view->imapFolders   = $this->application->services['session']->imapFolders;
             $this->view->currentFolder = $currentFolder;
             $this->view->title         = $currentFolder;
+            $this->view->messages      = $mail->fetchAll($page, $limit, $sort, $reverse);
+            $this->view->mailboxTotal  = $mail->getMailboxTotal();
+            $this->view->mailboxes     = $mail->getMailboxes();
+            $this->view->pages         = ($mail->hasPages($limit)) ?
+                new Paginator\Form($mail->getMailboxTotal(), $limit) : null;
         } else {
             $this->view->title = 'Mail';
+            $this->view->pages = null;
         }
 
         $this->send();

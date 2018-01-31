@@ -5,6 +5,12 @@ pop.changeMailbox = function() {
     window.location.href = '/mail/box/' + $('#accounts_select').val();
 };
 
+pop.changeFolder = function() {
+    if ($('#folder-select').val() != '#') {
+        window.location.href = $('#folder-select').val();
+    }
+};
+
 pop.toggleMailFolder = function(a) {
     if ($(a).next().css('display') == 'none') {
         $(a).next().show();
@@ -41,6 +47,10 @@ Dropzone.autoDiscover = false;
 $(document).ready(function(){
     if ($('#accounts_select')[0] != undefined) {
         $('#accounts_select').change(pop.changeMailbox);
+    }
+
+    if ($('#folder-select')[0] != undefined) {
+        $('#folder-select').change(pop.changeFolder);
     }
 
     if ($('a.current-folder')[0] != undefined) {

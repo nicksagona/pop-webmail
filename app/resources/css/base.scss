@@ -644,10 +644,6 @@ a.home {
   text-align: right;
 }
 
-.accounts-select {
-  float: right;
-}
-
 .data-form {
   margin: 10px auto 10px auto;
   padding: 15px 0 15px 0;
@@ -969,6 +965,10 @@ select#search_by {
     display: none;
   }
 
+  .small-md {
+    font-size: 0.825em;
+  }
+
   .navbar-collapse {
     max-height: none;
   }
@@ -1191,13 +1191,6 @@ select#search_by {
 
   .login-footer > div {
     font-size: 0.75em;
-  }
-
-  .accounts-select {
-    float: none;
-    display: block;
-    margin: 0 auto 15px auto;
-    width: 100%;
   }
 
   .footer-side  {

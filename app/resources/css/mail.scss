@@ -18,6 +18,10 @@
   border-right: solid 1px #ccc;
 }
 
+.mail-folder-div > select {
+  display: none;
+}
+
 .mail-folder-div > ul {
   margin: 0;
   padding: 0;
@@ -114,13 +118,12 @@
   top: -1px;
 }
 
-table.mail-table > tbody > tr > td {
-  border-top: solid 1px #ddd;
+.accounts-select {
+  float: right;
 }
 
-#mail_process_action {
-  margin-right: 10px;
-  height: 38px;
+table.mail-table > tbody > tr > td {
+  border-top: solid 1px #ddd;
 }
 
 #mail-compose-form {
@@ -215,4 +218,45 @@ button.mail-cancel-btn:after {
   position: relative;
   top: 4px;
   margin-right: 10px;
+}
+
+@media (max-width: 768px) {
+  .time-md {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .mail-folder-div {
+    margin: 0 auto;
+    padding: 0;
+    width: 100%;
+    float: none;
+    overflow: auto;
+    border-right: none;
+  }
+
+  .mail-list-div {
+    margin: 0 auto;
+    padding: 0;
+    width: 100%;
+    float: none;
+  }
+
+  .mail-folder-div > select {
+    margin: 0 auto 15px auto;
+    width: 100%;
+    display: block;
+  }
+
+  .mail-folder-div > ul, .mail-folder-div > ul > li, .mail-folder-div > ul > li > ul, .mail-folder-div > ul > li > ul > li {
+    display: none;
+  }
+
+  .accounts-select {
+    float: none;
+    display: block;
+    margin: 0 auto 15px auto;
+    width: 100%;
+  }
 }

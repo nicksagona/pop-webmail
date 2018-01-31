@@ -46,6 +46,20 @@ class Mail extends AbstractModel
     protected $mailer = null;
 
     /**
+     * Mailboxes
+     *
+     * @var array
+     */
+    protected $mailboxes = null;
+
+    /**
+     * Current mailbox total
+     *
+     * @var int
+     */
+    protected $mailboxTotal = null;
+
+    /**
      * Load account
      *
      * @param  int    $id
@@ -133,6 +147,21 @@ class Mail extends AbstractModel
     }
 
     /**
+     * Open IMAP connection
+     *
+     * @param string $flags
+     * @param int    $options
+     * @param int    $retries
+     * @param array  $params
+     * @return Mail
+     */
+    public function open($flags = null, $options = null, $retries = null, array $params = null)
+    {
+        $this->imap->open($flags, $options, $retries, $params);
+        return $this;
+    }
+
+    /**
      * Set folder
      *
      * @param  string $folder
@@ -185,6 +214,253 @@ class Mail extends AbstractModel
     {
         $this->mailboxes = $this->imap->listMailboxes($pattern);
         return $this->mailboxes;
+    }
+
+
+    /**
+     * Fetch all mail
+     *
+     * @param  int     $page
+     * @param  int     $limit
+     * @param  int     $sort
+     * @param  boolean $reverse
+     * @return array
+     */
+    public function fetchAll($page = null, $limit = null, $sort = SORTDATE, $reverse = true)
+    {
+        $ids                = $this->imap->getMessageIdsBy($sort, $reverse, SE_UID, 'ALL');
+        $this->mailboxTotal = count($ids);
+        $messages           = $this->getMessageOverview($ids, $page, $limit);
+        return $messages;
+    }
+
+    /**
+     * Fetch mail by subject
+     *
+     * @param  string  $subject
+     * @param  int     $page
+     * @param  int     $limit
+     * @param  int     $sort
+     * @param  boolean $reverse
+     * @return array
+     */
+    public function fetchBySubject($subject, $page = null, $limit = null, $sort = SORTDATE, $reverse = true)
+    {
+        $ids      = $this->imap->getMessageIdsBy($sort, $reverse, SE_UID, 'SUBJECT "' . $subject . '"');
+        $messages = $this->getMessageOverview($ids, $page, $limit);
+        return $messages;
+    }
+
+    /**
+     * Fetch mail by from address
+     *
+     * @param  string  $from
+     * @param  int     $page
+     * @param  int     $limit
+     * @param  int     $sort
+     * @param  boolean $reverse
+     * @return array
+     */
+    public function fetchFrom($from, $page = null, $limit = null, $sort = SORTDATE, $reverse = true)
+    {
+        $ids      = $this->imap->getMessageIdsBy($sort, $reverse, SE_UID, 'FROM "' . $from . '"');
+        $messages = $this->getMessageOverview($ids, $page, $limit);
+        return $messages;
+    }
+
+    /**
+     * Fetch mail by id
+     *
+     * @param  int $id
+     * @return \stdClass
+     */
+    public function fetchById($id)
+    {
+        $this->imap->markAsRead($id);
+
+        $headers = $this->imap->getMessageHeadersById($id);
+        $parts   = $this->imap->getMessageParts($id);
+
+        if (!isset($headers->subject) && isset($headers->Subject)) {
+            $headers->subject = $headers->Subject;
+        }
+        if (!isset($headers->Subject) && isset($headers->subject)) {
+            $headers->Subject = $headers->subject;
+        }
+
+        $message = new \stdClass();
+        $message->headers        = $headers;
+        $message->parts          = $parts;
+        $message->hasAttachments = false;
+
+        foreach ($parts as $i => $part) {
+            if ($part->attachment) {
+                $message->hasAttachments = true;
+                break;
+            }
+        }
+
+        return $message;
+    }
+
+    /**
+     * Fetch message attachment
+     *
+     * @param  int $id
+     * @param  int $i
+     * @return \stdClass
+     */
+    public function fetchAttachment($id, $i)
+    {
+        $file        = $this->imap->getMessageParts($id)[$i];
+        $disposition = null;
+
+        if ((strtolower(substr($file->basename, -4)) == '.pdf') || (stripos($file->content, '%PDF-') !== false)) {
+            $type = 'application/pdf';
+        } else if ((strtolower(substr($file->basename, -4)) == '.jpg') || (strtolower(substr($file->basename, -5)) == '.jpeg')) {
+            $type = 'image/jpeg';
+        } else if (strtolower(substr($file->basename, -4)) == '.gif') {
+            $type = 'image/gif';
+        } else if (strtolower(substr($file->basename, -4)) == '.png') {
+            $type = 'image/png';
+        } else if ((strtolower(substr($file->basename, -4)) == '.doc') || (strtolower(substr($file->basename, -5)) == '.docx')) {
+            $type = 'application/msword';
+        } else if ((strtolower(substr($file->basename, -4)) == '.xls') || (strtolower(substr($file->basename, -5)) == '.xlsx')) {
+            $type = 'application/vnd.ms-excel';
+        } else {
+            $type   = $file->type;
+            $disposition = 'attachment; ';
+        }
+
+        if (empty($file->basename)) {
+            $filename = 'attachment';
+            if (stripos($file->content, '%PDF-') !== false) {
+                $filename .= '.pdf';
+            }
+        } else {
+            $filename = str_replace(['"', ';'], ['', ''], $file->basename);
+        }
+
+        $attachment              = new \stdClass();
+        $attachment->type        = $type;
+        $attachment->disposition = $disposition;
+        $attachment->filename    = $filename;
+        $attachment->content     = $file->content;
+
+        return $attachment;
+    }
+
+    /**
+     * Get message overview
+     *
+     * @param  array $ids
+     * @param  int   $page
+     * @param  int   $limit
+     * @return array
+     */
+    public function getMessageOverview(array $ids, $page = null, $limit = null)
+    {
+        $messages = [];
+        $start    = ((null !== $page) && ((int)$page > 1)) ? ($page * $limit) - $limit : 0;
+        $end      = $start + ((null !== $limit) ? $limit : count($ids));
+
+        for ($i = $start; $i < $end; $i++) {
+            if (isset($ids[$i])) {
+                $messages[$ids[$i]] = $this->imap->getOverview($ids[$i]);
+                $structure          = $this->imap->getMessageStructure($ids[$i]);
+                $hasAttachment      = false;
+
+                if (isset($structure->parts)) {
+                    foreach ($structure->parts as $part) {
+                        if (isset($part->disposition) && (strtolower($part->disposition) == 'attachment')) {
+                            $hasAttachment = true;
+                            break;
+                        }
+                    }
+                }
+
+                $messages[$ids[$i]][0]->structure     = $structure;
+                $messages[$ids[$i]][0]->hasAttachment = $hasAttachment;
+            }
+        }
+
+        return $messages;
+    }
+
+    /**
+     * Get current mailbox total
+     *
+     * @return int
+     */
+    public function getMailboxTotal()
+    {
+        return $this->mailboxTotal;
+    }
+
+    /**
+     * Decode text
+     *
+     * @param  string $text
+     * @return string
+     */
+    public function decodeText($text)
+    {
+        $decodedValues = imap_mime_header_decode($text);
+        $decoded       = '';
+
+        foreach ($decodedValues as $string) {
+            $decoded .= $string->text;
+        }
+
+        return $decoded;
+    }
+
+    /**
+     * Get message body content
+     *
+     * @param  array $parts
+     * @return string
+     */
+    function getContent($parts)
+    {
+        $content = '';
+
+        foreach ($parts as $i => $part) {
+            if (!$part->attachment) {
+                $content = (base64_decode($part->content, true) !== false) ? base64_decode($part->content, true) : $part->content;
+                if ($content == strip_tags($content)) {
+                    $content = nl2br($content, true);
+                }
+                if (stripos($content, '<body')) {
+                    $content = substr($content, stripos($content, '<body'));
+                    $content = substr($content, (stripos($content, '>') + 1));
+                    $content = trim(substr($content, 0, stripos($content, '</body>')));
+                }
+            }
+        }
+
+        return strip_tags(str_replace(['<br>', '<br />'], [PHP_EOL, PHP_EOL], $content));
+    }
+
+    /**
+     * Determine if the current mailbox has pages
+     *
+     * @param  int $limit
+     * @return boolean
+     */
+    public function hasPages($limit)
+    {
+        return ((int)$this->mailboxTotal > $limit);
+    }
+
+    /**
+     * Send mail
+     *
+     * @return void
+     */
+    public function send()
+    {
+
     }
 
     /**
