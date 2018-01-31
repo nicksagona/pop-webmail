@@ -36,7 +36,6 @@ class MailController extends AbstractController
     public function index()
     {
         $this->prepareView('mail/index.phtml');
-        $this->view->title    = '';
         $this->view->pages    = null;
         $this->view->accounts = (new Model\Account())->getAll();
 
@@ -67,7 +66,9 @@ class MailController extends AbstractController
             }
             $this->view->imapFolders   = $this->application->services['session']->imapFolders;
             $this->view->currentFolder = $currentFolder;
-            $this->view->title        .= $currentFolder;
+            $this->view->title         = $currentFolder;
+        } else {
+            $this->view->title = 'Mail';
         }
 
         $this->send();
