@@ -1007,22 +1007,6 @@ select#search_by {
     display: none;
   }
 
-  .main-nav > li > a[title=Orders] + ul {
-    display: block;
-  }
-
-  .main-nav > li:hover > a[title=Orders] + ul {
-    display: block;
-  }
-
-  .main-nav > li > a[title=Users] + ul {
-    display: block;
-  }
-
-  .main-nav > li:hover > a[title=Users] + ul {
-    display: block;
-  }
-
   .main-nav > li > ul > li > a {
     position: relative;
     margin: 0;

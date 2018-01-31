@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title><?=$title; ?> : Pop Webmail</title>
+    <title><?=$title; ?><?php if (!empty($mailboxTotal)): ?> (<?=$mailboxTotal; ?>)<?php endif; ?> : <?php if (isset($currentAccountName)): echo $currentAccountName . ' : '; endif; ?>Pop Webmail</title>
 
     <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons" />
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Source+Sans+Pro:400,300,300italic,400italic,700,700italic,900,900italic" />
@@ -28,7 +28,7 @@
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul id="pop-top-nav" class="navbar-nav mr-auto main-nav">
                 <li>
-                    <a href="/mail/compose" title="Compose"><i class="material-icons">edit</i><span>Compose</span></a>
+                    <a href="/mail/compose" title="Compose" onclick="pop.openWindow(this.href, 'pab-mail', {width: 800, height: 900}); return false;"><i class="material-icons">edit</i><span>Compose</span></a>
                 </li>
                 <li>
                     <a href="/mail/accounts" title="Accounts"><i class="material-icons">account_circle</i><span>Accounts</span></a>

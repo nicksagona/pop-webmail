@@ -24,7 +24,7 @@ pop.toggleMailFolder = function(a) {
 
 pop.closeMail = function() {
     if ($('#dropzone')[0] != undefined) {
-        var user = pab.cookie.load('user');
+        var user = pop.cookie.load('user');
         $.ajax('/api/mail/clean', {
             "method"  : "POST",
             "headers" : {"Authorization": "Bearer " + user.token},

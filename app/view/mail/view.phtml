@@ -60,12 +60,10 @@ echo implode(', ', $ccAddresses);
                         <td><strong>Received:</strong></td>
                         <td><?=date('m/d/y g:i A', strtotime($message->headers->date)); ?></td>
                     </tr>
-<?php if (($message->hasAttachments) && ($acl->isAllowedMany($user->role_names, 'mail', 'attachments'))): ?>
                     <tr>
                         <td><strong>Attachments:</strong></td>
                         <td><?=implode('; ', getAttachments($message->parts, $id)); ?></td>
                     </tr>
-<?php endif; ?>
                     <tr>
                         <td colspan="2">
 <?=getContent($message->parts); ?>

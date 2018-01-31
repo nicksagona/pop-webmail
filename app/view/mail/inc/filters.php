@@ -29,7 +29,8 @@ function getContent($parts)
 
     foreach ($parts as $i => $part) {
         if (!$part->attachment) {
-            $content = (base64_decode($part->content, true) !== false) ? base64_decode($part->content, true) : $part->content;
+            //$content = (base64_decode($part->content, true) !== false) ? base64_decode($part->content, true) : $part->content;
+            $content = (base64_decode($part->content) !== false) ? base64_decode($part->content) : $part->content;
             if ($content == strip_tags($content)) {
                 $content = nl2br(convertLinks($content, true));
             }

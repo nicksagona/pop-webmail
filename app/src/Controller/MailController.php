@@ -13,7 +13,10 @@
  */
 namespace PopWebmail\Controller;
 
+use PopWebmail\Form;
 use PopWebmail\Model;
+use Pop\Dir\Dir;
+use Pop\Mail\Message;
 use Pop\Paginator;
 
 /**
@@ -47,7 +50,8 @@ class MailController extends AbstractController
         if (!isset($this->application->services['session']->currentAccountId)) {
             foreach ($this->view->accounts as $account) {
                 if ($account['default']) {
-                    $this->application->services['session']->currentAccountId = $account['id'];
+                    $this->application->services['session']->currentAccountId   = $account['id'];
+                    $this->application->services['session']->currentAccountName = $account['name'];
                     break;
                 }
             }
@@ -64,7 +68,8 @@ class MailController extends AbstractController
                 $currentFolder = 'INBOX';
             }
             $this->application->services['session']->currentFolder = $currentFolder;
-            $this->view->currentAccountId = $this->application->services['session']->currentAccountId;
+            $this->view->currentAccountId   = $this->application->services['session']->currentAccountId;
+            $this->view->currentAccountName = $this->application->services['session']->currentAccountName;
 
             if (!isset($this->application->services['session']->imapFolders)) {
                 $this->application->services['session']->imapFolders = $mail->getFolders();
@@ -93,8 +98,150 @@ class MailController extends AbstractController
      */
     public function box($id)
     {
-        $this->application->services['session']->currentAccountId = $id;
+        $account = (new Model\Account())->getById($id);
+        $this->application->services['session']->currentAccountId   = $id;
+        $this->application->services['session']->currentAccountName = $account['name'];
         $this->redirect('/mail');
+    }
+
+    /**
+     * Compose action method
+     *
+     * @return void
+     */
+    public function compose()
+    {
+        $mail = new Model\Mail();
+        $mail->loadAccount($this->application->services['session']->currentAccountId);
+
+        $this->prepareView('mail/compose.phtml');
+        $this->view->title  = 'Compose Message';
+        $this->view->folder = uniqid();
+        $this->view->form   = Form\Mail\Compose::createFromFieldsetConfig(
+            $this->application->config['forms']['PopWebmail\Form\Mail\Compose']
+        );
+        $this->view->form->setFieldValue('folder', $this->view->folder);
+
+        if (null !== $this->request->getQuery('id')) {
+            $this->view->id = $this->request->getQuery('id');
+            if (null !== $this->request->getQuery('to')) {
+                $this->view->form->setFieldValue('to', $this->request->getQuery('to'));
+            } else if (null !== $this->request->getQuery('action')) {
+                $message     = $mail->fetchById($this->request->getQuery('id'));
+                $subject     = $mail->decodeText($message->headers->subject);
+                $toAddresses = [];
+                $ccAddresses = [];
+
+                foreach ($message->headers->to as $to) {
+                    $toAddresses[] = $to->mailbox . '@' . $to->host;
+                }
+                foreach ($message->headers->cc as $cc) {
+                    $ccAddresses[] = $cc->mailbox . '@' . $cc->host;
+                }
+
+                if (($this->request->getQuery('action') == 'reply') && isset($toAddresses[0])) {
+                    $this->view->form->setFieldValue('subject', 'RE: ' . $subject);
+                    $this->view->form->setFieldValue('to', $toAddresses[0]);
+                } else if (($this->request->getQuery('action') == 'reply_all') && (count($toAddresses) > 0)) {
+                    $this->view->form->setFieldValue('subject', 'RE: ' . $subject);
+                    $this->view->form->setFieldValue('to', implode(', ', $toAddresses));
+                    if (count($ccAddresses) > 0) {
+                        $this->view->form->setFieldValue('cc', implode(', ', $ccAddresses));
+                    }
+                } else if ($this->request->getQuery('action') == 'forward') {
+                    $this->view->form->setFieldValue('subject', 'FWD: ' . $subject);
+                }
+
+                $this->view->form->setFieldValue('message', PHP_EOL . PHP_EOL .
+                    '----------------------------' . PHP_EOL . $mail->getContent($message->parts)
+                );
+            }
+        }
+
+        if ($this->request->isPost()) {
+            $message = new Message($this->request->getPost('subject'));
+            $message->setTo($this->request->getPost('to'));
+            $message->setFrom($mail->imap()->getUsername());
+
+            if (null !== $this->request->getPost('cc')) {
+                $message->setCc($this->request->getPost('cc'));
+            }
+
+            if (null !== $this->request->getPost('bcc')) {
+                $message->setBcc($this->request->getPost('bcc'));
+            }
+
+            if (!empty($this->request->getPost('folder')) &&
+                file_exists(__DIR__ . '/../../../../../../data/tmp/' . $this->request->getPost('folder'))) {
+                $folder = $this->request->getPost('folder');
+                $dir    = new Dir(__DIR__ . '/../../../../../../data/tmp/' . $folder, ['filesOnly' => true]);
+
+                foreach ($dir as $file) {
+                    if (!empty($file) && file_exists(__DIR__ . '/../../../../../../data/tmp/' . $folder . '/' . $file)) {
+                        $message->attachFile(__DIR__ . '/../../../../../../data/tmp/' . $folder . '/' . $file);
+                    }
+                }
+
+                $dir->emptyDir(true);
+            }
+
+            $message->setBody($this->request->getPost('message'));
+            $mail->mailer()->send($message);
+
+            $this->view->sent = true;
+        }
+
+        $this->send();
+    }
+
+    /**
+     * View action method
+     *
+     * @param  int $id
+     * @return void
+     */
+    public function view($id)
+    {
+        $mail = new Model\Mail();
+        $mail->loadAccount($this->application->services['session']->currentAccountId);
+
+        if (isset($this->application->services['session']->currentFolder)) {
+            $mail->setFolder($this->application->services['session']->currentFolder)->open('/ssl');
+        }
+
+        $this->prepareView('mail/view.phtml');
+
+        $this->view->id      = $id;
+        $this->view->message = $mail->fetchById($id);
+        $this->view->title   = (isset($this->view->message) && isset($this->view->message->headers) && isset($this->view->message->headers->Subject)) ?
+            $mail->decodeText($this->view->message->headers->Subject) : '';
+
+        $this->send();
+    }
+
+    /**
+     * Attachment action method
+     *
+     * @param  int $id
+     * @param  int $i
+     * @return void
+     */
+    public function attachments($id, $i)
+    {
+        $mail = new Model\Mail();
+        $mail->loadAccount($this->application->services['session']->currentAccountId);
+
+        if (isset($this->application->services['session']->currentFolder)) {
+            $mail->setFolder($this->application->services['session']->currentFolder)->open('/ssl');
+        }
+
+        $attachment = $mail->fetchAttachment($id, $i - 1);
+
+        $this->response->setHeader('Content-Type', $attachment->type)
+            ->setHeader('Content-Disposition', $attachment->disposition . 'filename="' . $attachment->filename . '"')
+            ->setBody($attachment->content);
+
+        $this->response->send();
     }
 
 }

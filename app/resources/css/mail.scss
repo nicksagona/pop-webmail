@@ -2,6 +2,13 @@
  * mail.scss
  */
 
+.title-header > a > i.fa {
+  position: relative;
+  top: -5px;
+  margin: 0 0 0 5px;
+  font-size: 0.5em;
+}
+
 .mail-div {
   margin: 0 auto;
   padding: 0;
