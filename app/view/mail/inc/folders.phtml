@@ -7,7 +7,7 @@ function generateFolderOptions($folders, $depth = 0, $parent = null, $currentFol
     $indent = ($depth > 1) ? str_repeat('&nbsp;&nbsp;', $depth) . ' &gt; ' : '';
 
     foreach($folders as $folderName => $folderContent) {
-        $url     = ($parent . $folderName != '[Gmail]') ? '/mail?folder=' . $parent . $folderName : '#';
+        $url     = ($parent . $folderName != '[Gmail]') ? $parent . $folderName : '#';
         $output .= '<option value="' . $url . '">' . $indent . $folderName . '</option>' . PHP_EOL;
         if (!empty($folderContent['subfolders'])) {
             $output .= generateFolderOptions($folderContent['subfolders'], $depth, $parent . $folderName . '/', $currentFolder);
@@ -16,6 +16,7 @@ function generateFolderOptions($folders, $depth = 0, $parent = null, $currentFol
 
     return $output;
 }
+
 function generateFolderList($folders, $depth = 0, $parent = null, $currentFolder) {
     $depth++;
 

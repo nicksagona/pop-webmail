@@ -104,6 +104,10 @@ a:hover {
   font-size: 0.825em;
 }
 
+.footer > div > span {
+  display: inline;
+}
+
 .login-footer > div {
   font-size: 0.8em;
   color: $login-footer-color;
@@ -960,6 +964,12 @@ select#search_by {
   }
 }
 
+@media (max-width: 992px) {
+  th.responsive-table-column-lg, td.responsive-table-column-lg {
+    display: none;
+  }
+}
+
 @media (max-width: 768px) {
   .login-div {
     width: 67%;
@@ -1183,6 +1193,10 @@ select#search_by {
 
   .footer {
     height: 60px;
+  }
+
+  .footer > div > span {
+    display: block;
   }
 
   .login-div {

@@ -453,9 +453,7 @@ class Mail extends AbstractModel
             switch ($data['mail_process_action']) {
                 // Move to folder
                 case 2:
-                    foreach ($data['process_mail'] as $id) {
-                        //$this->imap->markAsRead($id);
-                    }
+                    $this->imap->moveMessage($data['process_mail'], $data['move_folder_select']);
                     break;
                 // Mark as read
                 case 1:

@@ -12,7 +12,18 @@ include __DIR__ . '/../inc/header.phtml';
 <?php endforeach; ?>
             </select>
 <?php endif; ?>
-            <h1 class="title-header"><i class="material-icons header-icon">email</i> <?=$title;?><?php if (!empty($mailboxTotal)): ?> (<?=$mailboxTotal; ?>) <a href="<?=$_SERVER['REQUEST_URI']; ?>"><i class="fa fa-refresh"></i></a><?php endif; ?></h1>
+            <h1 class="title-header">
+                <i class="material-icons header-icon">email</i> <?=$title;?>
+<?php if (!empty($mailboxTotal)): ?>
+(<?=$mailboxTotal; ?>) <a href="<?=$_SERVER['REQUEST_URI']; ?>"><i class="fa fa-refresh"></i></a>
+
+                <form id="mail-search-form" action="/orders/email-orders" method="get">
+                    <div><input class="form-control form-control-sm" tabindex="1" type="text" name="search_subject" id="search_subject" value="" placeholder=" Subject" size="10" /></div>
+                    <div><input class="form-control form-control-sm" tabindex="2" type="text" name="search_from" id="search_from" value="" placeholder=" From" size="10" /></div>
+                    <div><input class="btn btn-sm btn-secondary" tabindex="3" type="submit" id="submit" value="Search" /></div>
+                </form>
+<?php endif; ?>
+            </h1>
 <?php if (count($accounts) > 0): ?>
             <div class="clear-both">
 <?php if (null !== $pages): ?>
@@ -31,9 +42,9 @@ include __DIR__ . '/../inc/header.phtml';
                                 <tr>
                                     <th class="text-center" style="width: 50px;">&nbsp;</th>
                                     <th>Subject</th>
-                                    <th class="responsive-table-column-md"><?=(stripos($currentFolder, 'sent') !== false) ? 'To' : 'From'; ?></th>
+                                    <th class="responsive-table-column-lg"><?=(stripos($currentFolder, 'sent') !== false) ? 'To' : 'From'; ?></th>
                                     <th>Date</th>
-                                    <th class="responsive-table-column-md">Size</th>
+                                    <th class="responsive-table-column-lg">Size</th>
                                     <th>&nbsp;</th>
                                     <th class="rm-col text-center" style="width: 50px;"><input type="checkbox" name="check_all" id="checkAll" data-name="process_mail" value="" /></th>
                                 </tr>
@@ -46,13 +57,13 @@ include __DIR__ . '/../inc/header.phtml';
                                 <tr>
                                     <td class="text-center" style="width: 50px;"><a href="/mail/<?=$id; ?>" onclick="pop.openWindow(this.href, 'pab-mail', {width: 800, height: 900}); return false;"><i class="gray-link fa fa-envelope<?=((isset($message[0]) && !($message[0]->seen)) ? '' : '-open-o'); ?>"></i></a></td>
                                     <td class="small-md"><?=(isset($message[0]) && !($message[0]->seen)) ? '<strong>' : ''; ?><span class="responsive-lg"><?=$subject; ?></span><span class="responsive-sm"><?=$shortSubject; ?></span><?=(isset($message[0]) && !($message[0]->seen)) ? '</strong>' : ''; ?></td>
-                                    <td class="responsive-table-column-md"><?php if ((stripos($currentFolder, 'sent') !== false) && isset($message[0]) && isset($message[0]->to)):
+                                    <td class="responsive-table-column-lg"><?php if ((stripos($currentFolder, 'sent') !== false) && isset($message[0]) && isset($message[0]->to)):
     echo '<a href="mailto:' . filter_var(filter_var($message[0]->to, FILTER_SANITIZE_EMAIL), FILTER_VALIDATE_EMAIL) . '">' . htmlentities($message[0]->to, ENT_QUOTES, 'UTF-8') . '</a>';
 elseif (isset($message[0]) && isset($message[0]->from)):
     echo '<a href="mailto:' . filter_var(filter_var($message[0]->from, FILTER_SANITIZE_EMAIL), FILTER_VALIDATE_EMAIL) . '">' . htmlentities($message[0]->from, ENT_QUOTES, 'UTF-8') . '</a>';
 endif; ?></td>
                                     <td class="small no-wrap"><?=(isset($message[0]) && isset($message[0]->date)) ? date('n/j/y', strtotime($message[0]->date)) . '<span class="time-md"> ' . date('g:i A', strtotime($message[0]->date)) . '</span>': ''; ?></td>
-                                    <td class="small no-wrap responsive-table-column-md"><?=(isset($message[0]) && isset($message[0]->size)) ? getFilesize($message[0]->size) : ''; ?></td>
+                                    <td class="small no-wrap responsive-table-column-lg"><?=(isset($message[0]) && isset($message[0]->size)) ? getFilesize($message[0]->size) : ''; ?></td>
                                     <td class="text-center"><?=(isset($message[0]) && isset($message[0]->hasAttachment) && ($message[0]->hasAttachment)) ? '<i class="fa fa-paperclip"></i>' : ''; ?></td>
                                     <td class="rm-col text-center" style="width: 50px;"><input type="checkbox" name="process_mail[]" value="<?=$id; ?>" /></td>
                                 </tr>
@@ -66,7 +77,11 @@ endif; ?></td>
                                 <option value="2">Move to Folder</option>
                                 <option value="-1">Delete</option>
                             </select>
-                            <input class="btn btn-md btn-danger text-uppercase" type="submit" value="Process" name="submit" />
+                            <select name="move_folder_select" id="move-folder-select" class="move-folder-select">' . PHP_EOL;
+                                <option value="----">[Select Folder]</option>
+<?=generateFolderOptions($imapFolders, 0, null, $currentFolder); ?>
+                            </select>
+                            <input class="btn btn-md btn-danger text-uppercase process-btn" type="submit" value="Process" name="submit" />
                         </div>
                     </form>
 <?php else: ?>

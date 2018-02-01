@@ -7,7 +7,7 @@ pop.changeMailbox = function() {
 
 pop.changeFolder = function() {
     if (($('#folder-select').val() != '#') && ($('#folder-select').val() != '----')) {
-        window.location.href = $('#folder-select').val();
+        window.location.href = '/mail?folder=' + $('#folder-select').val();
     }
 };
 
@@ -53,6 +53,16 @@ $(document).ready(function(){
 
     if ($('a.current-folder')[0] != undefined) {
         $('a.current-folder').parent().parent().show();
+    }
+
+    if ($('#move-folder-select')[0] != undefined) {
+        $('#mail_process_action').change(function() {
+            if ($('#mail_process_action').val() == 2) {
+                $('#move-folder-select').css('display', 'inline-block');
+            } else {
+                $('#move-folder-select').css('display', 'none');
+            }
+        });
     }
 
     if ($('#mail-process-form')[0] != undefined) {
