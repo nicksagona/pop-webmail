@@ -53,6 +53,14 @@ return [
         'controller' => 'PopWebmail\Controller\MailController',
         'action'     => 'box'
     ],
+    '/mail/upload' => [
+        'controller' => 'PopWebmail\Controller\MailController',
+        'action'     => 'upload'
+    ],
+    '/mail/clean' => [
+        'controller' => 'PopWebmail\Controller\MailController',
+        'action'     => 'clean'
+    ],
     '*' => [
         'controller' => 'PopWebmail\Controller\IndexController',
         'action'     => 'error'

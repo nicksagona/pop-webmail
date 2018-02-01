@@ -38,8 +38,8 @@ class Compose extends \Pop\Form\Form
     public function __construct(array $fields = null, $action = null, $method = 'post')
     {
         parent::__construct($fields, $action, $method);
-        $this->setAttribute('class', 'compose-form');
-        $this->setAttribute('id', 'compose-form');
+        $this->setAttribute('class', 'mail-compose-form');
+        $this->setAttribute('id', 'mail-compose-form');
     }
 
 }

@@ -50,7 +50,7 @@ return [
             'value' => 'Cancel',
             'attributes' => [
                 'class'   => 'btn btn-md btn-block btn-danger text-uppercase mail-cancel-btn',
-                'onclick' => 'pab.closeMail(); return false;'
+                'onclick' => 'pop.closeMail(); return false;'
             ]
         ],
         'submit' => [

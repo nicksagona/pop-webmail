@@ -24,10 +24,8 @@ pop.toggleMailFolder = function(a) {
 
 pop.closeMail = function() {
     if ($('#dropzone')[0] != undefined) {
-        var user = pop.cookie.load('user');
-        $.ajax('/api/mail/clean', {
+        $.ajax('/mail/clean', {
             "method"  : "POST",
-            "headers" : {"Authorization": "Bearer " + user.token},
             "data"    : {
                 "folder" : $('#dropzone').data('folder')
             },
@@ -58,10 +56,8 @@ $(document).ready(function(){
     }
 
     if ($('#dropzone')[0] != undefined) {
-        var user = pab.cookie.load('user');
         $('#dropzone').dropzone({
-            url     : "/api/mail/upload",
-            headers : {"Authorization" : "Bearer " + user.token},
+            url     : "/mail/upload",
             init    : function() {
                 this.on('sending', function(file, xhr, formData) {
                     formData.append("folder", $('#dropzone').data('folder'));

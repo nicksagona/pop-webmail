@@ -16,6 +16,7 @@ namespace PopWebmail\Controller;
 use PopWebmail\Form;
 use PopWebmail\Model;
 use Pop\Dir\Dir;
+use Pop\Http\Upload;
 use Pop\Mail\Message;
 use Pop\Paginator;
 
@@ -132,11 +133,15 @@ class MailController extends AbstractController
                 $toAddresses = [];
                 $ccAddresses = [];
 
-                foreach ($message->headers->to as $to) {
-                    $toAddresses[] = $to->mailbox . '@' . $to->host;
+                if (!empty($message->headers->from)) {
+                    foreach ($message->headers->from as $from) {
+                        $toAddresses[] = $from->mailbox . '@' . $from->host;
+                    }
                 }
-                foreach ($message->headers->cc as $cc) {
-                    $ccAddresses[] = $cc->mailbox . '@' . $cc->host;
+                if (!empty($message->headers->cc)) {
+                    foreach ($message->headers->cc as $cc) {
+                        $ccAddresses[] = $cc->mailbox . '@' . $cc->host;
+                    }
                 }
 
                 if (($this->request->getQuery('action') == 'reply') && isset($toAddresses[0])) {
@@ -172,13 +177,13 @@ class MailController extends AbstractController
             }
 
             if (!empty($this->request->getPost('folder')) &&
-                file_exists(__DIR__ . '/../../../../../../data/tmp/' . $this->request->getPost('folder'))) {
+                file_exists(__DIR__ . '/../../../data/tmp/' . $this->request->getPost('folder'))) {
                 $folder = $this->request->getPost('folder');
-                $dir    = new Dir(__DIR__ . '/../../../../../../data/tmp/' . $folder, ['filesOnly' => true]);
+                $dir    = new Dir(__DIR__ . '/../../../data/tmp/' . $folder, ['filesOnly' => true]);
 
                 foreach ($dir as $file) {
-                    if (!empty($file) && file_exists(__DIR__ . '/../../../../../../data/tmp/' . $folder . '/' . $file)) {
-                        $message->attachFile(__DIR__ . '/../../../../../../data/tmp/' . $folder . '/' . $file);
+                    if (!empty($file) && file_exists(__DIR__ . '/../../../data/tmp/' . $folder . '/' . $file)) {
+                        $message->attachFile(__DIR__ . '/../../../data/tmp/' . $folder . '/' . $file);
                     }
                 }
 
@@ -242,6 +247,48 @@ class MailController extends AbstractController
             ->setBody($attachment->content);
 
         $this->response->send();
+    }
+
+    /**
+     * Upload action method
+     *
+     * @return void
+     */
+    public function upload()
+    {
+        $folder = $this->request->getPost('folder');
+        $json   = [
+            'folder' => $folder,
+            'files'  => []
+        ];
+
+        if (!file_exists(__DIR__ . '/../../../data/tmp/' . $folder)) {
+            mkdir(__DIR__ . '/../../../data/tmp/' . $folder);
+            chmod(__DIR__ . '/../../../data/tmp/' . $folder, 0777);
+        }
+
+        foreach ($_FILES as $key => $file) {
+            $upload   = new Upload(__DIR__ . '/../../../data/tmp/' . $folder);
+            $filename = $upload->upload($file);
+            $json['files'][] = $filename;
+        }
+
+        $this->send(200, json_encode($json, JSON_PRETTY_PRINT));
+    }
+
+
+    /**
+     * Clean up action method
+     *
+     * @return void
+     */
+    public function clean()
+    {
+        $folder = $this->request->getPost('folder');
+        if (!empty($folder) && file_exists(__DIR__ . '/../../../data/tmp/' . $folder)) {
+            $dir = new Dir(__DIR__ . '/../../../data/tmp/' . $folder);
+            $dir->emptyDir(true);
+        }
     }
 
 }
