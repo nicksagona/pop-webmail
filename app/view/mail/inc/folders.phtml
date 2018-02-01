@@ -40,6 +40,7 @@ function generateFolderList($folders, $depth = 0, $parent = null, $currentFolder
 
 if (isset($imapFolders)):
     echo '<select id="folder-select">' . PHP_EOL;
+    echo '    <option value="----">[Select Folder]</option>' . PHP_EOL;
     echo generateFolderOptions($imapFolders, 0, null, $currentFolder);
     echo '</select>' . PHP_EOL;
     echo generateFolderList($imapFolders, 0, null, $currentFolder);

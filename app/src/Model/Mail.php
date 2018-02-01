@@ -451,16 +451,25 @@ class Mail extends AbstractModel
     {
         if (isset($data['process_mail']) && isset($data['mail_process_action'])) {
             switch ($data['mail_process_action']) {
+                // Move to folder
+                case 2:
+                    foreach ($data['process_mail'] as $id) {
+                        //$this->imap->markAsRead($id);
+                    }
+                    break;
+                // Mark as read
                 case 1:
                     foreach ($data['process_mail'] as $id) {
                         $this->imap->markAsRead($id);
                     }
                     break;
+                // Mark as unread
                 case 0:
                     foreach ($data['process_mail'] as $id) {
                         $this->imap->markAsUnread($id);
                     }
                     break;
+                // Delete
                 case -1:
                     foreach ($data['process_mail'] as $id) {
                         $this->imap->deleteMessage($id);

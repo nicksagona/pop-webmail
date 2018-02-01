@@ -6,7 +6,7 @@ pop.changeMailbox = function() {
 };
 
 pop.changeFolder = function() {
-    if ($('#folder-select').val() != '#') {
+    if (($('#folder-select').val() != '#') && ($('#folder-select').val() != '----')) {
         window.location.href = $('#folder-select').val();
     }
 };
