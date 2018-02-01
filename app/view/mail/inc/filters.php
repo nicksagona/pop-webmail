@@ -25,12 +25,13 @@ function getAttachments($parts, $id) {
 
 function getContent($parts)
 {
-    $content = '';
+    $text         = null;
+    $html         = null;
+    $foundContent = null;
 
     foreach ($parts as $i => $part) {
         if (!$part->attachment) {
-            //$content = (base64_decode($part->content, true) !== false) ? base64_decode($part->content, true) : $part->content;
-            $content = (base64_decode($part->content) !== false) ? base64_decode($part->content) : $part->content;
+            $content = (base64_decode($part->content, true) !== false) ? base64_decode($part->content, true) : $part->content;
             if ($content == strip_tags($content)) {
                 $content = nl2br(convertLinks($content, true));
             }
@@ -39,8 +40,19 @@ function getContent($parts)
                 $content = substr($content, (stripos($content, '>') + 1));
                 $content = trim(substr($content, 0, stripos($content, '</body>')));
             }
+            if ($part->type == 'text/html') {
+                $html = $content;
+            } else if ($part->type == 'text/plain') {
+                $text = $content;
+            }
         }
     }
 
-    return $content;
+    if (null !== $html) {
+        $foundContent = $html;
+    } else if (null !== $text) {
+        $foundContent = $text;
+    }
+
+    return $foundContent;
 }

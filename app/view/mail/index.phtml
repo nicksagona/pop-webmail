@@ -12,7 +12,7 @@ include __DIR__ . '/../inc/header.phtml';
 <?php endforeach; ?>
             </select>
 <?php endif; ?>
-            <h1 class="title-header"><i class="material-icons header-icon">email</i> <?=$title;?><?php if (!empty($mailboxTotal)): ?> (<?=$mailboxTotal; ?>)<?php endif; ?> <a href="<?=$_SERVER['REQUEST_URI']; ?>"><i class="fa fa-refresh"></i></a></h1>
+            <h1 class="title-header"><i class="material-icons header-icon">email</i> <?=$title;?><?php if (!empty($mailboxTotal)): ?> (<?=$mailboxTotal; ?>) <a href="<?=$_SERVER['REQUEST_URI']; ?>"><i class="fa fa-refresh"></i></a><?php endif; ?></h1>
 <?php if (count($accounts) > 0): ?>
             <div class="clear-both">
 <?php if (null !== $pages): ?>
