@@ -80,6 +80,7 @@ class MailController extends AbstractController
             $this->view->title         = $currentFolder;
             $this->view->messages      = $mail->fetchAll($page, $limit, $sort, $reverse);
             $this->view->mailboxTotal  = $mail->getMailboxTotal();
+            $this->view->unread        = $mail->getNumberOfUnread();
             $this->view->mailboxes     = $mail->getMailboxes();
             $this->view->pages         = ($mail->hasPages($limit)) ?
                 new Paginator\Form($mail->getMailboxTotal(), $limit) : null;
@@ -102,6 +103,7 @@ class MailController extends AbstractController
         $account = (new Model\Account())->getById($id);
         $this->application->services['session']->currentAccountId   = $id;
         $this->application->services['session']->currentAccountName = $account['name'];
+        unset($this->application->services['session']->imapFolders);
         $this->redirect('/mail');
     }
 
@@ -149,7 +151,12 @@ class MailController extends AbstractController
         }
 
         if (null !== $this->request->getQuery('id')) {
+            if (isset($this->application->services['session']->currentFolder)) {
+                $mail->setFolder($this->application->services['session']->currentFolder)->open('/ssl');
+            }
+
             $this->view->id = $this->request->getQuery('id');
+
             if (null !== $this->request->getQuery('action')) {
                 $message     = $mail->fetchById($this->request->getQuery('id'));
                 $subject     = $mail->decodeText($message->headers->subject);
@@ -181,7 +188,7 @@ class MailController extends AbstractController
                 }
 
                 $this->view->form->setFieldValue('message', PHP_EOL . PHP_EOL .
-                    '----------------------------' . PHP_EOL . $mail->getContent($message->parts)
+                    '----------------------------' . PHP_EOL . strip_tags(str_replace(['<br>', '<br />'], [PHP_EOL, PHP_EOL], $mail->getContent($message->parts)))
                 );
             }
         }
@@ -239,9 +246,11 @@ class MailController extends AbstractController
 
         $this->prepareView('mail/view.phtml');
 
-        $this->view->id      = $id;
-        $this->view->message = $mail->fetchById($id);
-        $this->view->title   = (isset($this->view->message) && isset($this->view->message->headers) && isset($this->view->message->headers->Subject)) ?
+        $this->view->id          = $id;
+        $this->view->message     = $mail->fetchById($id);
+        $this->view->content     = $mail->getContent($this->view->message->parts);
+        $this->view->attachments = $mail->getAttachmentLinks($this->view->message->parts, $id);
+        $this->view->title       = (isset($this->view->message) && isset($this->view->message->headers) && isset($this->view->message->headers->Subject)) ?
             $mail->decodeText($this->view->message->headers->Subject) : '';
 
         $this->send();

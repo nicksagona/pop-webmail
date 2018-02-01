@@ -1,5 +1,4 @@
 <?php
-include __DIR__ . '/inc/filters.php';
 include __DIR__ . '/../inc/functions.php';
 include __DIR__ . '/../inc/header.phtml';
 ?>
@@ -13,7 +12,7 @@ include __DIR__ . '/../inc/header.phtml';
             </select>
 <?php endif; ?>
             <h1 class="title-header">
-                <i class="material-icons header-icon">email</i> <?=$title;?><?php if (!empty($mailboxTotal)): ?> (<?=$mailboxTotal; ?>)<?php endif; ?>
+                <i class="material-icons header-icon">email</i> <?=$title;?><?php if (!empty($unread)): ?> (<?=$unread; ?>)<?php endif; ?>
             </h1>
 <?php if (count($accounts) > 0): ?>
             <div class="clear-both">
@@ -50,7 +49,7 @@ include __DIR__ . '/../inc/header.phtml';
                             </thead>
                             <tbody>
 <?php foreach ($messages as $id => $message):
-    $subject      = (isset($message[0]) && isset($message[0]->subject)) ? decodeText($message[0]->subject) : '';
+    $subject      = (isset($message[0]) && isset($message[0]->subject)) ? $message[0]->subject : '';
     $shortSubject = (strlen($subject) > 20) ? substr($subject, 0, 20) . '...' : $subject;
 
     $emailAddress = null;

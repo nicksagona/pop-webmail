@@ -1,5 +1,4 @@
 <?php include __DIR__ . '/../inc/functions.php'; ?>
-<?php include __DIR__ . '/inc/filters.php'; ?>
 <?php include __DIR__ . '/../inc/header-no-nav.phtml'; ?>
     <div class="container-fluid main-dashboard">
         <div class="col-md-12">
@@ -60,13 +59,15 @@ echo implode(', ', $ccAddresses);
                         <td><strong>Received:</strong></td>
                         <td><?=date('m/d/y g:i A', strtotime($message->headers->date)); ?></td>
                     </tr>
+<?php if (count($attachments) > 0): ?>
                     <tr>
                         <td><strong>Attachments:</strong></td>
-                        <td><?=implode('; ', getAttachments($message->parts, $id)); ?></td>
+                        <td><?=implode('; ', $attachments); ?></td>
                     </tr>
+<?php endif; ?>
                     <tr>
                         <td colspan="2">
-<?=getContent($message->parts); ?>
+<?=$content; ?>
                         </td>
                     </tr>
                 </tbody>

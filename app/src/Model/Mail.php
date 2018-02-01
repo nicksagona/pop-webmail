@@ -369,6 +369,10 @@ class Mail extends AbstractModel
                 $structure          = $this->imap->getMessageStructure($ids[$i]);
                 $hasAttachment      = false;
 
+                if (isset($messages[$ids[$i]][0]) && isset($messages[$ids[$i]][0]->subject)) {
+                    $messages[$ids[$i]][0]->subject = $this->decodeText($messages[$ids[$i]][0]->subject);
+                }
+
                 if (isset($structure->parts)) {
                     foreach ($structure->parts as $part) {
                         if (isset($part->disposition) && (strtolower($part->disposition) == 'attachment')) {
@@ -397,6 +401,16 @@ class Mail extends AbstractModel
     }
 
     /**
+     * Get number of unread messages
+     *
+     * @return int
+     */
+    public function getNumberOfUnread()
+    {
+        return $this->imap->getNumberOfUnreadMessages();
+    }
+
+    /**
      * Decode text
      *
      * @param  string $text
@@ -415,30 +429,118 @@ class Mail extends AbstractModel
     }
 
     /**
+     * Convert links in text
+     *
+     * @param  string  $string
+     * @param  boolean $target
+     * @return string
+     */
+    public function convertLinks($string, $target = null) {
+        $target = (null !== $target) ? 'target="' . $target . '" ' : '';
+        $string = preg_replace('/[ftp|http|https]+:\/\/[^\s]*/', '<a href="$0">$0</a>', $string);
+        $string = preg_replace('/\s[\w]+[a-zA-Z0-9\.\-\_]+(\.[a-zA-Z]{2,4})/', ' <a href="http://$0">$0</a>', $string);
+        $string = preg_replace('/[a-zA-Z0-9\.\-\_+%]+@[a-zA-Z0-9\-\_\.]+\.[a-zA-Z]{2,4}/', '<a href="mailto:$0">$0</a>', $string);
+        $string = str_replace(
+            [
+                'href="http:// ',
+                'href="https:// ',
+                '"> ',
+                '<a '
+            ],
+            [
+                'href="http://',
+                'href="https://',
+                '">',
+                '<a ' . $target
+            ],
+            $string
+        );
+        return $string;
+    }
+
+    /**
      * Get message body content
      *
      * @param  array $parts
      * @return string
      */
-    function getContent($parts)
+    public function getContent($parts)
     {
-        $content = '';
+        $text         = null;
+        $html         = null;
+        $fallBack     = null;
+        $foundContent = null;
 
         foreach ($parts as $i => $part) {
             if (!$part->attachment) {
                 $content = (base64_decode($part->content, true) !== false) ? base64_decode($part->content, true) : $part->content;
                 if ($content == strip_tags($content)) {
-                    $content = nl2br($content, true);
+                    $content = nl2br($this->convertLinks($content, true));
                 }
                 if (stripos($content, '<body')) {
                     $content = substr($content, stripos($content, '<body'));
                     $content = substr($content, (stripos($content, '>') + 1));
                     $content = trim(substr($content, 0, stripos($content, '</body>')));
                 }
+                if ($part->type == 'text/html') {
+                    $html = $content;
+                } else if ($part->type == 'text/plain') {
+                    $text = $content;
+                } else if ($part->type == 'multipart/alternative') {
+                    if (isset($part->headers['Content-Type']) && (strpos($part->headers['Content-Type'], 'boundary=') !== false)) {
+                        $boundary = str_replace('"', '', substr($part->headers['Content-Type'], (strpos($part->headers['Content-Type'], 'boundary=') + 9)));
+                        $contentAry = explode('--' . $boundary, $content);
+                        foreach ($contentAry as $c) {
+                            if (strpos($c, 'text/html')) {
+                                $html = $c;
+                                if (strpos($html, "\r\n\r\n") !== false) {
+                                    $html = substr($html, (strpos($html, "\r\n\r\n") + 4));
+                                }
+                            } else if (strpos($c, 'text/plain')) {
+                                $text = $c;
+                                if (strpos($text, "\r\n\r\n") !== false) {
+                                    $text = substr($text, (strpos($text, "\r\n\r\n") + 4));
+                                }
+                            }
+                        }
+                    } else {
+                        $text = $content;
+                    }
+                } else {
+                    $fallBack = $content;
+                }
             }
         }
 
-        return strip_tags(str_replace(['<br>', '<br />'], [PHP_EOL, PHP_EOL], $content));
+        if (null !== $html) {
+            $foundContent = $html;
+        } else if (null !== $text) {
+            $foundContent = $text;
+        } else if (null !== $fallBack) {
+            $foundContent = $fallBack;
+        }
+
+        return $foundContent;
+    }
+
+    /**
+     * Get message attachments links
+     *
+     * @param  array $parts
+     * @param  int   $id
+     * @return array
+     */
+    public function getAttachmentLinks($parts, $id) {
+        $attachments = [];
+
+        foreach ($parts as $i => $part) {
+            if ($part->attachment) {
+                $attachments[] = '<a href="/mail/attachments/' . $id . '/' . ($i + 1) . '">' .
+                    (!empty($part->basename) ? $part->basename : 'file_' . ($i + 1)) . '</a>';
+            }
+        }
+
+        return $attachments;
     }
 
     /**
