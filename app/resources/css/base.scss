@@ -833,6 +833,14 @@ span.responsive-table-column-sm {
   display: inline;
 }
 
+.responsive-lg {
+  display: inline;
+}
+
+.responsive-sm {
+  display: none;
+}
+
 .search-form {
   margin: 10px 0 0 0;
   padding: 0;
@@ -959,6 +967,14 @@ select#search_by {
 
   .profile-form {
     width: 80%;
+  }
+
+  .responsive-lg {
+    display: none;
+  }
+
+  .responsive-sm {
+    display: inline;
   }
 
   th.responsive-table-column-md, td.responsive-table-column-md {

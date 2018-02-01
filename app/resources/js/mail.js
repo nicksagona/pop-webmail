@@ -55,6 +55,14 @@ $(document).ready(function(){
         $('a.current-folder').parent().parent().show();
     }
 
+    if ($('#mail-process-form')[0] != undefined) {
+        $('#mail-process-form').submit(function(){
+            if ($('mail_process_action').val() == -1) {
+                return confirm('This action cannot be undone. Are you sure?');
+            }
+        });
+    }
+
     if ($('#dropzone')[0] != undefined) {
         $('#dropzone').dropzone({
             url     : "/mail/upload",

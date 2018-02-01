@@ -106,6 +106,27 @@ class MailController extends AbstractController
     }
 
     /**
+     * Process action method
+     *
+     * @return void
+     */
+    public function process()
+    {
+        if ($this->request->isPost()) {
+            $mail = new Model\Mail();
+            $mail->loadAccount($this->application->services['session']->currentAccountId);
+            $mail->process($this->request->getPost());
+            if ($this->request->getPost('mail_process_action') == -1) {
+                $this->application->services['session']->setRequestValue('removed', true);
+            } else {
+                $this->application->services['session']->setRequestValue('saved', true);
+            }
+        }
+
+        $this->redirect('/mail');
+    }
+
+    /**
      * Compose action method
      *
      * @return void

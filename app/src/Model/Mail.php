@@ -216,7 +216,6 @@ class Mail extends AbstractModel
         return $this->mailboxes;
     }
 
-
     /**
      * Fetch all mail
      *
@@ -443,6 +442,35 @@ class Mail extends AbstractModel
     }
 
     /**
+     * Process mailbox
+     *
+     * @param array $data
+     * @return void
+     */
+    public function process(array $data)
+    {
+        if (isset($data['process_mail']) && isset($data['mail_process_action'])) {
+            switch ($data['mail_process_action']) {
+                case 1:
+                    foreach ($data['process_mail'] as $id) {
+                        $this->imap->markAsRead($id);
+                    }
+                    break;
+                case 0:
+                    foreach ($data['process_mail'] as $id) {
+                        $this->imap->markAsUnread($id);
+                    }
+                    break;
+                case -1:
+                    foreach ($data['process_mail'] as $id) {
+                        $this->imap->deleteMessage($id);
+                    }
+                    break;
+            }
+        }
+    }
+
+    /**
      * Determine if the current mailbox has pages
      *
      * @param  int $limit
@@ -451,16 +479,6 @@ class Mail extends AbstractModel
     public function hasPages($limit)
     {
         return ((int)$this->mailboxTotal > $limit);
-    }
-
-    /**
-     * Send mail
-     *
-     * @return void
-     */
-    public function send()
-    {
-
     }
 
     /**

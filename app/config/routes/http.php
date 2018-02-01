@@ -61,6 +61,10 @@ return [
         'controller' => 'PopWebmail\Controller\MailController',
         'action'     => 'clean'
     ],
+    '/mail/process' => [
+        'controller' => 'PopWebmail\Controller\MailController',
+        'action'     => 'process'
+    ],
     '*' => [
         'controller' => 'PopWebmail\Controller\IndexController',
         'action'     => 'error'
