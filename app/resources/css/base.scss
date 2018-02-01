@@ -936,6 +936,10 @@ select#search_by {
   font-size: 1.1em;
 }
 
+.responsive-md {
+  display: none;
+}
+
 @media (max-width: 1600px) {
   .login-div {
     width: 30%;
@@ -962,12 +966,21 @@ select#search_by {
   .main-nav > li > a > i {
     width: 22px;
   }
+
+  .responsive-md {
+    display: inline;
+  }
+  .responsive-md-lg {
+    display: none;
+  }
 }
 
 @media (max-width: 992px) {
   th.responsive-table-column-lg, td.responsive-table-column-lg {
     display: none;
   }
+
+
 }
 
 @media (max-width: 768px) {
@@ -980,6 +993,10 @@ select#search_by {
   }
 
   .responsive-lg {
+    display: none;
+  }
+
+  .responsive-md {
     display: none;
   }
 

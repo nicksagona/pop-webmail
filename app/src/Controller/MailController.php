@@ -144,11 +144,13 @@ class MailController extends AbstractController
         );
         $this->view->form->setFieldValue('folder', $this->view->folder);
 
+        if (null !== $this->request->getQuery('to')) {
+            $this->view->form->setFieldValue('to', $this->request->getQuery('to'));
+        }
+
         if (null !== $this->request->getQuery('id')) {
             $this->view->id = $this->request->getQuery('id');
-            if (null !== $this->request->getQuery('to')) {
-                $this->view->form->setFieldValue('to', $this->request->getQuery('to'));
-            } else if (null !== $this->request->getQuery('action')) {
+            if (null !== $this->request->getQuery('action')) {
                 $message     = $mail->fetchById($this->request->getQuery('id'));
                 $subject     = $mail->decodeText($message->headers->subject);
                 $toAddresses = [];

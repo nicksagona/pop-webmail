@@ -17,12 +17,11 @@
 }
 
 .mail-folder-div {
-  margin: 0 20px 0 0;
-  padding: 0 20px 0 0;
-  width: 180px;
+  margin: 0 10px 0 0;
+  padding: 0 5px 0 5px;
+  width: 200px;
   float: left;
   overflow: auto;
-  border-right: solid 1px #ccc;
 }
 
 .mail-folder-div > select {
@@ -40,7 +39,7 @@
   list-style-type: none;
   clear: both;
   display: block;
-  border-top: solid 1px #ccc;
+  border-top: solid 1px #ddd;
 }
 
 .mail-folder-div > ul > li > a:nth-child(1) > i.material-icons {
@@ -53,15 +52,15 @@
   margin: 0;
   padding: 10px 0 10px 0;
   display: inline-block;
-  width: 135px;
+  width: 170px;
   float: left;
 }
 
 .mail-folder-div > ul > li > a:nth-child(2) {
   margin: 0;
-  padding: 10px 0 10px 5px;
+  padding: 10px 0 10px 0;
   display: inline-block;
-  width: 15px;
+  width: 10px;
   text-align: center;
   float: left;
 }
@@ -84,8 +83,7 @@
   margin: 0;
   padding: 5px 0 5px 20px;
   display: block;
-  background-color: #ededed;
-  border-top: solid 1px #ccc;
+  border-top: solid 1px #ddd;
 }
 
 .mail-folder-div > ul > li > ul > li > a > i.material-icons {
@@ -96,8 +94,8 @@
 
 .mail-list-div {
   margin: 0;
-  padding: 0;
-  width: calc(100% - 200px);
+  padding: 0 5px 0 5px;
+  width: calc(100% - 230px);
   float: right;
 }
 
@@ -168,9 +166,7 @@ table.mail-table > tbody > tr > td {
 }
 
 #mail-search-form {
-  position: relative;
-  top: -3px;
-  margin: 0;
+  margin: 0 0 10px 0;
   padding: 0;
   display: inline-block;
 }
@@ -179,16 +175,6 @@ table.mail-table > tbody > tr > td {
   margin: 0;
   padding: 0;
   display: inline-block;
-}
-
-#mail-search-form > div > input[type=text] {
-  position: relative;
-  top: -4px;
-}
-
-#mail-search-form > div > input[type=submit] {
-  position: relative;
-  top: 0;
 }
 
 button.mail-send-btn:after {
@@ -263,6 +249,31 @@ button.mail-cancel-btn:after {
   margin-right: 10px;
 }
 
+.mail-nav-btn {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding-left: 15px;
+  text-align: left;
+}
+
+.mail-nav-btn > i {
+  position: relative;
+  top: 3px;
+  margin-right: 5px;
+  display: inline-block;
+  text-align: center;
+  width: 25px;
+}
+
+.mail-nav-btn > span {
+  position: relative;
+  top: -5px;
+}
+
+.mail-nav-bottom-div {
+  display: none;
+}
+
 @media (max-width: 768px) {
   .time-md {
     display: none;
@@ -272,6 +283,14 @@ button.mail-cancel-btn:after {
 @media (max-width: 480px) {
   #mail-search-form {
     display: none;
+  }
+
+  .mail-nav-side-div {
+    display: none;
+  }
+
+  .mail-nav-bottom-div {
+    display: block;
   }
 
   .mail-folder-div {
