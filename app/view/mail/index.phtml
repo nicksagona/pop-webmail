@@ -19,6 +19,7 @@ include __DIR__ . '/../inc/header.phtml';
 <?php if (null !== $pages): ?>
                 <div class="page-links"><?=$pages; ?></div>
 <?php endif; ?>
+                <h6 class="message-count"><?=$mailboxTotal; ?> Messages</h6>
             </div>
             <form id="mail-search-form" action="/orders/email-orders" method="get">
                 <div><input class="form-control form-control-sm" tabindex="1" type="text" name="search_subject" id="search_subject" value="" placeholder=" Subject" size="15" /></div>
