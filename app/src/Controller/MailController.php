@@ -74,6 +74,7 @@ class MailController extends AbstractController
 
             if (!isset($this->application->services['session']->imapFolders)) {
                 $this->application->services['session']->imapFolders = $mail->getFolders();
+                $this->application->services['session']->mailboxes   = $mail->getMailboxes();
             }
             $this->view->imapFolders   = $this->application->services['session']->imapFolders;
             $this->view->currentFolder = $currentFolder;
@@ -117,15 +118,20 @@ class MailController extends AbstractController
         if ($this->request->isPost()) {
             $mail = new Model\Mail();
             $mail->loadAccount($this->application->services['session']->currentAccountId);
-            $mail->process($this->request->getPost());
+            if (isset($this->application->services['session']->currentFolder)) {
+                $mail->setFolder($this->application->services['session']->currentFolder)->open('/ssl');
+            }
+            $mail->process($this->request->getPost(), $this->application->services['session']->mailboxes);
             if ($this->request->getPost('mail_process_action') == -1) {
                 $this->application->services['session']->setRequestValue('removed', true);
             } else {
                 $this->application->services['session']->setRequestValue('saved', true);
             }
+            $this->redirect('/mail?folder=' . $this->request->getPost('folder'));
+        } else {
+            $this->redirect('/mail');
         }
 
-        $this->redirect('/mail');
     }
 
     /**

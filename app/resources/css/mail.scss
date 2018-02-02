@@ -118,10 +118,6 @@
   border: solid 1px #868e96;
   border-radius: 3px;
 }
-.mail-nav > a > i.material-icons {
-  position: relative;
-  top: -1px;
-}
 
 .accounts-select {
   float: right;
@@ -256,7 +252,12 @@ button.mail-cancel-btn:after {
   text-align: left;
 }
 
-.mail-nav-btn > i {
+.mail-nav-btn-fa {
+  padding-top: 9px;
+  padding-bottom: 9px;
+}
+
+.mail-nav-btn > i.material-icons {
   position: relative;
   top: 3px;
   margin-right: 5px;
@@ -265,9 +266,37 @@ button.mail-cancel-btn:after {
   width: 25px;
 }
 
+
+.mail-nav-btn > i.fa {
+  position: relative;
+  top: 0;
+  margin-right: 5px;
+  display: inline-block;
+  text-align: center;
+  width: 25px;
+}
+
+/*
+.mail-nav > a > i.material-icons {
+  position: relative;
+  top: -1px;
+}
+
+.mail-nav > a > i.fa {
+  position: relative;
+  top: -3px;
+}
+*/
+
+
 .mail-nav-btn > span {
   position: relative;
   top: -5px;
+}
+
+.mail-nav-btn > span.fa-span {
+  position: relative;
+  top: -1px;
 }
 
 .mail-nav-bottom-div {

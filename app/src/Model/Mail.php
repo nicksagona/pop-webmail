@@ -547,12 +547,17 @@ class Mail extends AbstractModel
      * Process mailbox
      *
      * @param array $data
+     * @param array $folders
      * @return void
      */
-    public function process(array $data)
+    public function process(array $data, $folders)
     {
         if (isset($data['process_mail']) && isset($data['mail_process_action'])) {
             switch ($data['mail_process_action']) {
+                // Copy to folder
+                case 3:
+                    $this->imap->copyMessage($data['process_mail'], $data['move_folder_select']);
+                    break;
                 // Move to folder
                 case 2:
                     $this->imap->moveMessage($data['process_mail'], $data['move_folder_select']);
@@ -569,8 +574,31 @@ class Mail extends AbstractModel
                         $this->imap->markAsUnread($id);
                     }
                     break;
-                // Delete
+                // Move to trash
                 case -1:
+                    $trashFolder = null;
+
+                    foreach ($folders as $folder) {
+                        if (stripos($folder, 'trash') !== false) {
+                            $trashFolder = substr($folder, (strpos($folder, '}') + 1));
+                            break;
+                        }
+                    }
+
+                    if (null === $trashFolder) {
+                        foreach ($folders as $folder) {
+                            if (stripos($folder, 'deleted') !== false) {
+                                $trashFolder = substr($folder, (strpos($folder, '}') + 1));
+                                break;
+                            }
+                        }
+                    }
+                    if (null !== $trashFolder) {
+                        $this->imap->moveMessage($data['process_mail'], $trashFolder);
+                    }
+                    break;
+                // Delete permanently
+                case -2:
                     foreach ($data['process_mail'] as $id) {
                         $this->imap->deleteMessage($id);
                     }

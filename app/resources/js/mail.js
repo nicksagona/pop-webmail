@@ -57,7 +57,7 @@ $(document).ready(function(){
 
     if ($('#move-folder-select')[0] != undefined) {
         $('#mail_process_action').change(function() {
-            if ($('#mail_process_action').val() == 2) {
+            if ($('#mail_process_action').val() >= 2) {
                 $('#move-folder-select').css('display', 'inline-block');
             } else {
                 $('#move-folder-select').css('display', 'none');
@@ -67,7 +67,7 @@ $(document).ready(function(){
 
     if ($('#mail-process-form')[0] != undefined) {
         $('#mail-process-form').submit(function(){
-            if ($('mail_process_action').val() == -1) {
+            if ($('#mail_process_action').val() == -2) {
                 return confirm('This action cannot be undone. Are you sure?');
             }
         });

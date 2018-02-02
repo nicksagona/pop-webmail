@@ -90,13 +90,15 @@ endif; ?></td>
                                 <option value="1">Mark as Read</option>
                                 <option value="0">Mark as Unread</option>
                                 <option value="2">Move to Folder</option>
-                                <option value="-1">Delete</option>
+                                <option value="3">Copy to Folder</option>
+                                <option value="-1">Move to Trash</option>
+                                <option value="-2">Delete Permanently</option>
                             </select>
                             <select name="move_folder_select" id="move-folder-select" class="move-folder-select">' . PHP_EOL;
                                 <option value="----">[Select Folder]</option>
 <?=generateFolderOptions($imapFolders, 0, null, $currentFolder); ?>
                             </select>
-                            <input class="btn btn-md btn-danger text-uppercase process-btn" type="submit" value="Process" name="submit" />
+                            <input class="btn btn-md btn-danger text-uppercase process-btn" type="submit" value="Process" name="submit" /><input type="hidden" name="folder" value="<?=$currentFolder; ?>" />
                         </div>
                     </form>
 <?php else: ?>
