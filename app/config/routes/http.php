@@ -61,6 +61,18 @@ return [
         'controller' => 'PopWebmail\Controller\MailController',
         'action'     => 'clean'
     ],
+    '/mail/folder/add' => [
+        'controller' => 'PopWebmail\Controller\MailController',
+        'action'     => 'addFolder'
+    ],
+    '/mail/folder/rename' => [
+        'controller' => 'PopWebmail\Controller\MailController',
+        'action'     => 'renameFolder'
+    ],
+    '/mail/folder/remove' => [
+        'controller' => 'PopWebmail\Controller\MailController',
+        'action'     => 'removeFolder'
+    ],
     '/mail/process' => [
         'controller' => 'PopWebmail\Controller\MailController',
         'action'     => 'process'

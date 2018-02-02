@@ -608,6 +608,51 @@ class Mail extends AbstractModel
     }
 
     /**
+     * Add folder
+     *
+     * @param array $data
+     * @return void
+     */
+    public function addFolder(array $data)
+    {
+        if (isset($data['new_folder_name'])) {
+            $newFolder = $data['new_folder_name'];
+            if (isset($data['add_folder_to']) && ($data['add_folder_to'] != '----')) {
+                $newFolder = $data['add_folder_to'] . '/' . $newFolder;
+            }
+            $this->imap->createMailbox($newFolder);
+        }
+    }
+
+    /**
+     * Rename folder
+     *
+     * @param array $data
+     * @return void
+     */
+    public function renameFolder(array $data)
+    {
+        if (isset($data['folder_to_rename']) && ($data['folder_to_rename'] != '----') && !empty($data['rename_folder_to'])) {
+            $oldFolder = $data['folder_to_rename'];
+            $newFolder = $data['rename_folder_to'];
+            $this->imap->renameMailbox($newFolder, $oldFolder);
+        }
+    }
+
+    /**
+     * Remove folder
+     *
+     * @param array $data
+     * @return void
+     */
+    public function removeFolder(array $data)
+    {
+        if (isset($data['folder_to_remove']) && ($data['folder_to_remove'] != '----')) {
+            $this->imap->deleteMailbox($data['folder_to_remove']);
+        }
+    }
+
+    /**
      * Determine if the current mailbox has pages
      *
      * @param  int $limit

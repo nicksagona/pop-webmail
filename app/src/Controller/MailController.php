@@ -314,7 +314,6 @@ class MailController extends AbstractController
         $this->send(200, json_encode($json, JSON_PRETTY_PRINT));
     }
 
-
     /**
      * Clean up action method
      *
@@ -327,6 +326,81 @@ class MailController extends AbstractController
             $dir = new Dir(__DIR__ . '/../../../data/tmp/' . $folder);
             $dir->emptyDir(true);
         }
+    }
+
+    /**
+     * Add folder method
+     *
+     * @return void
+     */
+    public function addFolder()
+    {
+        if ($this->request->isPost()) {
+            $mail = new Model\Mail();
+            $mail->loadAccount($this->application->services['session']->currentAccountId);
+
+            if (isset($this->application->services['session']->currentFolder)) {
+                $mail->setFolder($this->application->services['session']->currentFolder)->open('/ssl');
+            }
+
+            $mail->addFolder($this->request->getPost());
+            $this->application->services['session']->setRequestValue('saved', true);
+            unset($this->application->services['session']->currentFolder);
+            unset($this->application->services['session']->imapFolders);
+            unset($this->application->services['session']->mailboxes);
+        }
+
+        $this->redirect('/mail');
+    }
+
+    /**
+     * Rename folder method
+     *
+     * @return void
+     */
+    public function renameFolder()
+    {
+        if ($this->request->isPost()) {
+            $mail = new Model\Mail();
+            $mail->loadAccount($this->application->services['session']->currentAccountId);
+
+            if (isset($this->application->services['session']->currentFolder)) {
+                $mail->setFolder($this->application->services['session']->currentFolder)->open('/ssl');
+            }
+
+            $mail->renameFolder($this->request->getPost());
+            $this->application->services['session']->setRequestValue('saved', true);
+            unset($this->application->services['session']->currentFolder);
+            unset($this->application->services['session']->imapFolders);
+            unset($this->application->services['session']->mailboxes);
+        }
+
+        $this->redirect('/mail');
+    }
+
+    /**
+     * Remove folder method
+     *
+     * @return void
+     */
+    public function removeFolder()
+    {
+        if ($this->request->isPost()) {
+            $mail = new Model\Mail();
+            $mail->loadAccount($this->application->services['session']->currentAccountId);
+
+            if (isset($this->application->services['session']->currentFolder)) {
+                $mail->setFolder($this->application->services['session']->currentFolder)->open('/ssl');
+            }
+
+            $mail->removeFolder($this->request->getPost());
+            $this->application->services['session']->setRequestValue('removed', true);
+            unset($this->application->services['session']->currentFolder);
+            unset($this->application->services['session']->imapFolders);
+            unset($this->application->services['session']->mailboxes);
+        }
+
+        $this->redirect('/mail');
     }
 
 }

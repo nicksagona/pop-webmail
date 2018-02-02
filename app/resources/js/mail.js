@@ -40,6 +40,17 @@ pop.closeMail = function() {
     return false;
 };
 
+pop.openFolderForm = function(form) {
+    $('div.folder-form-div').css('display', 'none');
+    $(form).fadeIn();
+    return false;
+};
+
+pop.closeFolderForm = function(a) {
+    $($(a).parent().parent()).fadeOut();
+    return false;
+};
+
 Dropzone.autoDiscover = false;
 
 $(document).ready(function(){
@@ -72,6 +83,13 @@ $(document).ready(function(){
             }
         });
     }
+
+    if ($('#remove-folder-form-div')[0] != undefined) {
+        $('#remove-folder-form-div').submit(function(){
+            return confirm('This action cannot be undone. Are you sure?');
+        });
+    }
+
 
     if ($('#dropzone')[0] != undefined) {
         $('#dropzone').dropzone({

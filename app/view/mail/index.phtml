@@ -95,7 +95,7 @@ endif; ?></td>
                                 <option value="-1">Move to Trash</option>
                                 <option value="-2">Delete Permanently</option>
                             </select>
-                            <select name="move_folder_select" id="move-folder-select" class="move-folder-select">' . PHP_EOL;
+                            <select name="move_folder_select" id="move-folder-select" class="move-folder-select">
                                 <option value="----">[Select Folder]</option>
 <?=generateFolderOptions($imapFolders, 0, null, $currentFolder); ?>
                             </select>
@@ -111,5 +111,46 @@ endif; ?></td>
             <p>There are currently no mail accounts set up. <a href="/mail/accounts/create">Add one here</a>.</p>
 <?php endif; ?>
         </div>
+    </div>
+    <div id="add-folder-form-div" class="folder-form-div">
+        <form id="add-folder-form" action="/mail/folder/add" method="post">
+            <a href="#" class="form-close gray-link" onclick="return pop.closeFolderForm(this);"><i class="fa fa-close"></i></a>
+            <h4>Add Folder</h4>
+            <div><input class="form-control" tabindex="1" type="text" name="new_folder_name" id="new_folder_name" value="" placeholder=" New Folder Name" size="20" /></div>
+            <div>
+                <select name="add_folder_to" id="add-folder-to" class="add-folder-to">
+                    <option value="----">[Add Under]</option>
+<?=generateFolderOptions($imapFolders, 0, null, $currentFolder); ?>
+                </select>
+            </div>
+            <div><input class="btn btn-md btn-block btn-primary" tabindex="3" type="submit" value="Add" /></div>
+        </form>
+    </div>
+    <div id="rename-folder-form-div" class="folder-form-div">
+        <form id="rename-folder-form" action="/mail/folder/rename" method="post">
+            <a href="#" class="form-close gray-link" onclick="return pop.closeFolderForm(this);"><i class="fa fa-close"></i></a>
+            <h4>Rename Folder</h4>
+            <div>
+                <select name="folder_to_rename" id="folder-to-rename" class="folder-to-rename">
+                    <option value="----">[Select Folder]</option>
+<?=generateFolderOptions($imapFolders, 0, null, $currentFolder); ?>
+                </select>
+            </div>
+            <div><input class="form-control" tabindex="1" type="text" name="rename_folder_to" id="rename_folder_to" value="" placeholder=" New Folder Name" size="20" /></div>
+            <div><input class="btn btn-md btn-block btn-primary" tabindex="3" type="submit" value="Rename" /></div>
+        </form>
+    </div>
+    <div id="remove-folder-form-div" class="folder-form-div">
+        <form id="remove-folder-form" action="/mail/folder/remove" method="post">
+            <a href="#" class="form-close gray-link" onclick="return pop.closeFolderForm(this);"><i class="fa fa-close"></i></a>
+            <h4>Remove Folder</h4>
+            <div>
+                <select name="folder_to_remove" id="folder-to-remove" class="folder-to-remove">
+                    <option value="----">[Select Folder]</option>
+<?=generateFolderOptions($imapFolders, 0, null, $currentFolder); ?>
+                </select>
+            </div>
+            <div><input class="btn btn-md btn-block btn-danger" tabindex="3" type="submit" value="Remove" /></div>
+        </form>
     </div>
 <?php include __DIR__ . '/../inc/footer.phtml'; ?>
