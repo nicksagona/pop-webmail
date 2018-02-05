@@ -40,13 +40,13 @@ pop.closeMail = function() {
     return false;
 };
 
-pop.openFolderForm = function(form) {
-    $('div.folder-form-div').css('display', 'none');
+pop.openMailForm = function(form) {
+    $('div.mail-form-div').css('display', 'none');
     $(form).fadeIn();
     return false;
 };
 
-pop.closeFolderForm = function(a) {
+pop.closeMailForm = function(a) {
     $($(a).parent().parent()).fadeOut();
     return false;
 };

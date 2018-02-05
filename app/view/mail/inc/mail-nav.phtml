@@ -1,5 +1,5 @@
     <a href="<?=$_SERVER['REQUEST_URI']; ?>" class="btn btn-block btn-md btn-secondary mail-nav-btn"><i class="material-icons">cached</i> <span>Refresh</span></a>
     <a href="/mail/compose" class="btn btn-block btn-md btn-secondary mail-nav-btn" onclick="pop.openWindow(this.href, 'pab-mail', {width: 800, height: 900}); return false;"><i class="material-icons">edit</i> <span>Compose</span></a>
-    <a href="#" class="btn btn-block btn-md btn-secondary mail-nav-btn" onclick="return pop.openFolderForm('#add-folder-form-div');"><i class="material-icons">create_new_folder</i> <span>Add Folder</span></a>
-    <a href="#" class="btn btn-block btn-md btn-secondary mail-nav-btn mail-nav-btn-fa" onclick="return pop.openFolderForm('#rename-folder-form-div');"><i class="fa fa-tag fa-lg"></i> <span class="fa-span">Rename Folder</span></a>
-    <a href="#" class="btn btn-block btn-md btn-secondary mail-nav-btn mail-nav-btn-fa" onclick="return pop.openFolderForm('#remove-folder-form-div');"><i class="fa fa-remove fa-lg"></i> <span class="fa-span">Remove Folder</span></a>
+    <a href="#" class="btn btn-block btn-md btn-secondary mail-nav-btn" onclick="return pop.openMailForm('#add-folder-form-div');"><i class="material-icons">create_new_folder</i> <span>Add Folder</span></a>
+    <a href="#" class="btn btn-block btn-md btn-secondary mail-nav-btn mail-nav-btn-fa" onclick="return pop.openMailForm('#rename-folder-form-div');"><i class="fa fa-tag fa-lg"></i> <span class="fa-span">Rename Folder</span></a>
+    <a href="#" class="btn btn-block btn-md btn-secondary mail-nav-btn mail-nav-btn-fa" onclick="return pop.openMailForm('#remove-folder-form-div');"><i class="fa fa-remove fa-lg"></i> <span class="fa-span">Remove Folder</span></a>

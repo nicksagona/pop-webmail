@@ -205,7 +205,22 @@ button.mail-cancel-btn:after {
   clear: both;
 }
 
-.folder-form-div {
+#advanced-search-form div {
+  margin-top: 0;
+  margin-bottom: 5px;
+  padding-top: 0;
+  padding-bottom: 5px;
+}
+
+#advanced-search-form label {
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  font-size: 0.9em;
+}
+
+.mail-form-div {
   position: fixed;
   z-index: 10000;
   top: 0;
@@ -222,22 +237,52 @@ button.mail-cancel-btn:after {
   box-shadow: 0 0 6px 2px #bbb;
 }
 
-.folder-form-div > form > h4 {
+.mail-form-div-lg {
+  width: 480px;
+  height: 400px;
+}
+
+.mail-form-div > form > h4 {
   margin: 0;
   padding: 0;
 }
 
-.folder-form-div > form > div {
+.mail-form-div > form > div {
   padding: 7px 0 7px 0;
 }
 
-.folder-form-div > form > div > select {
+.mail-form-div > form > div > select {
   width: 100%;
   display: block;
 }
 
 .form-close {
   float: right;
+}
+
+.search-date {
+  width: 48%;
+}
+
+label[for="search_since"] {
+  display: inline-block;
+  width: 48%;
+}
+
+label[for="search_before"] {
+  display: inline-block;
+  float: right;
+  width: 48%;
+}
+
+.search-btn {
+  margin: 0;
+  padding: 2px 4px 1px 4px;
+}
+
+.search-btn > i.material-icons {
+  position: relative;
+  top: 2px;
 }
 
 #dropzone {
@@ -338,7 +383,7 @@ button.mail-cancel-btn:after {
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 576px) {
   #mail-search-form {
     display: none;
   }

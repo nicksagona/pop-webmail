@@ -235,6 +235,10 @@ class Mail extends AbstractModel
                     case 'STATUS':
                         $searchString .= $value . ' ';
                         break;
+                    case 'SINCE':
+                    case 'BEFORE':
+                        $searchString .= $key . ' "' . date('j F Y', strtotime($value)) . '" ';
+                        break;
                     default:
                         $searchString .= $key . ' "' . $value . '" ';
                 }
