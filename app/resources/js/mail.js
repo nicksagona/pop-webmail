@@ -90,7 +90,6 @@ $(document).ready(function(){
         });
     }
 
-
     if ($('#dropzone')[0] != undefined) {
         $('#dropzone').dropzone({
             url     : "/mail/upload",
@@ -100,6 +99,20 @@ $(document).ready(function(){
                 })
             },
             dictDefaultMessage : '<h3><i class="material-icons">attach_file</i> Drag and Drop Attachments Here.</h3>'
+        });
+        $('#dropzone').on('dragenter', function(e) {
+            $(this).css('color', '#3daacc')
+                .css('border', 'dashed 5px #3daacc')
+                .css('background-color', '#ccf3ff');
+            e.stopPropagation();
+            e.preventDefault();
+        });
+        $('#dropzone').on('dragleave', function(e) {
+            $(this).css('color', '#aaa')
+                .css('border', 'dashed 5px #aaa')
+                .css('background-color', '#eee');
+            e.stopPropagation();
+            e.preventDefault();
         });
     }
 });

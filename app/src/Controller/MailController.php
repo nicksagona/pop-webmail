@@ -80,7 +80,7 @@ class MailController extends AbstractController
         $mail->loadAccount($this->application->services['session']->currentAccountId);
 
         if ($mail->isImapLoaded()) {
-            if (null !== $this->request->getQuery('folder')) {
+            if (!empty($this->request->getQuery('folder'))) {
                 $currentFolder = $this->request->getQuery('folder');
                 $mail->setFolder($currentFolder)->open('/ssl');
             } else {
@@ -329,7 +329,7 @@ class MailController extends AbstractController
             $json['files'][] = $filename;
         }
 
-        $this->send(200, json_encode($json, JSON_PRETTY_PRINT));
+        $this->send(json_encode($json, JSON_PRETTY_PRINT));
     }
 
     /**

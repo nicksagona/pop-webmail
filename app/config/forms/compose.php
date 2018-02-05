@@ -9,7 +9,9 @@ return [
             'attributes' => [
                 'class'  => 'form-control'
             ]
-        ],
+        ]
+    ],
+    [
         'to' => [
             'type'       => 'text',
             'label'      => 'To:',
@@ -38,7 +40,7 @@ return [
             'type'       => 'textarea',
             'required'   => true,
             'attributes' => [
-                'rows'   => 15,
+                'rows'   => 12,
                 'cols'   => 60,
                 'class'  => 'form-control'
             ]

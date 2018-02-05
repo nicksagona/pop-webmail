@@ -131,7 +131,7 @@ table.mail-table > tbody > tr > td {
   clear: both;
 }
 
-#mail-compose-form-fieldset-1 > dl > dt {
+#mail-compose-form-fieldset-1 > dl > dt, #mail-compose-form-fieldset-2 > dl > dt {
   margin: 0;
   padding: 5px 10px 10px 0;
   text-align: right;
@@ -140,7 +140,7 @@ table.mail-table > tbody > tr > td {
   width: 75px;
 }
 
-#mail-compose-form-fieldset-1 > dl > dd {
+#mail-compose-form-fieldset-1 > dl > dd, #mail-compose-form-fieldset-2 > dl > dd {
   margin: 0;
   padding: 0 0 10px 0;
   float: left;
@@ -148,14 +148,14 @@ table.mail-table > tbody > tr > td {
   width: calc(100% - 75px);
 }
 
-#mail-compose-form-fieldset-2 {
+#mail-compose-form-fieldset-1, #mail-compose-form-fieldset-2, #mail-compose-form-fieldset-3 {
   margin: 10px 0 5px 0;
   padding: 20px 0 5px 0;
   clear: both;
   border-top: solid 1px #ddd;
 }
 
-#mail-compose-form-fieldset-3 > dl > dd:nth-child(1) {
+#mail-compose-form-fieldset-4 > dl > dd:nth-child(1) {
   width: 42%;
   display: inline-block;
   float: right;
@@ -195,13 +195,13 @@ button.mail-cancel-btn:after {
   text-align: right;
 }
 
-#mail-compose-form-fieldset-3 > dl > dd:nth-child(2) {
+#mail-compose-form-fieldset-4 > dl > dd:nth-child(2) {
   width: 42%;
   display: inline-block;
   float: left;
 }
 
-#mail-compose-form-fieldset-3 > dl > dd:nth-child(3) {
+#mail-compose-form-fieldset-4 > dl > dd:nth-child(3) {
   clear: both;
 }
 
@@ -287,16 +287,22 @@ label[for="search_before"] {
 
 #dropzone {
   position: relative;
+  z-index: 100;
   margin: 0 auto;
   padding: 0;
   width: 100%;
-  height: 160px;
+  min-height: 140px;
   font-weight: bold;
   font-size: 2.2em;
   text-align: center;
   color: #aaa;
   border: dashed 5px #aaa;
   background-color: #eee;
+}
+
+#dropzone > div {
+  position: relative;
+  z-index: -1;
 }
 
 #mail_process_action {
