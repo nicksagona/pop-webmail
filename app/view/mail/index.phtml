@@ -19,12 +19,14 @@ include __DIR__ . '/../inc/header.phtml';
 <?php if (null !== $pages): ?>
                 <div class="page-links"><?=$pages; ?></div>
 <?php endif; ?>
+<?php if ($mailboxTotal > 0): ?>
                 <h6 class="message-count"><?=$mailboxTotal; ?> Messages</h6>
+<?php endif; ?>
             </div>
-            <form id="mail-search-form" action="/orders/email-orders" method="get">
+            <form id="mail-search-form" action="/mail" method="get">
                 <div><input class="form-control form-control-sm" tabindex="1" type="text" name="search_subject" id="search_subject" value="" placeholder=" Subject" size="15" /></div>
                 <div><input class="form-control form-control-sm" tabindex="2" type="text" name="search_from" id="search_from" value="" placeholder=" From" size="15" /></div>
-                <div><input class="btn btn-sm btn-secondary" tabindex="3" type="submit" id="submit" value="Search" /></div>
+                <div><input class="btn btn-sm btn-secondary" tabindex="3" type="submit" id="submit" value="Search" /><input type="hidden" name="folder" value="<?=$currentFolder; ?>" /> <a href="/mail?folder=<?=$currentFolder; ?>" class="btn btn-sm btn-secondary">Clear</a></div>
             </form>
             <div class="mail-div">
                 <div class="mail-folder-div">
@@ -40,10 +42,10 @@ include __DIR__ . '/../inc/header.phtml';
                             <thead>
                                 <tr>
                                     <th class="text-center" style="width: 50px;">&nbsp;</th>
-                                    <th>Subject</th>
-                                    <th class="responsive-table-column-lg"><?=(stripos($currentFolder, 'sent') !== false) ? 'To' : 'From'; ?></th>
-                                    <th>Date</th>
-                                    <th class="responsive-table-column-lg">Size</th>
+                                    <th><a href="/mail?sort=<?=getSort(3) . getQuery('sort'); ?>">Subject</a></th>
+                                    <th class="responsive-table-column-lg"><a href="/mail?sort=<?=((stripos($currentFolder, 'sent') !== false) ? getSort(4) : getSort(2)) . getQuery('sort'); ?>"><?=(stripos($currentFolder, 'sent') !== false) ? 'To' : 'From'; ?></a></th>
+                                    <th><a href="/mail?sort=<?=getSort(0) . getQuery('sort'); ?>">Date</a></th>
+                                    <th class="responsive-table-column-lg"><a href="/mail?sort=<?=getSort(6) . getQuery('sort'); ?>">Size</a></th>
                                     <th>&nbsp;</th>
                                     <th class="rm-col text-center" style="width: 50px;"><input type="checkbox" name="check_all" id="checkAll" data-name="process_mail" value="" /></th>
                                 </tr>

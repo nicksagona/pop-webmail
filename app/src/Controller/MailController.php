@@ -42,8 +42,21 @@ class MailController extends AbstractController
     {
         $page    = (null !== $this->request->getQuery('page')) ? (int)$this->request->getQuery('page') : 1;
         $limit   = $this->application->config['pagination'];
-        $sort    = (null !== $this->request->getQuery('sort')) ? (int)$this->request->getQuery('sort') : SORTDATE;
-        $reverse = (null !== $this->request->getQuery('order')) ? !($this->request->getQuery('order') != 'ASC') : true;
+        $subject = (null !== $this->request->getQuery('search_subject')) ? $this->request->getQuery('search_subject') : null;
+        $from    = (null !== $this->request->getQuery('search_from')) ? $this->request->getQuery('search_from') : null;
+
+        if (null !== $this->request->getQuery('sort')) {
+            $sort = $this->request->getQuery('sort');
+            if (substr($sort, 0, 1) == '-') {
+                $sort    = substr($sort, 1);
+                $reverse = true;
+            } else {
+                $reverse = false;
+            }
+        } else {
+            $sort    = SORTDATE;
+            $reverse = true;
+        }
 
         $this->prepareView('mail/index.phtml');
         $this->view->accounts = (new Model\Account())->getAll();
@@ -79,7 +92,7 @@ class MailController extends AbstractController
             $this->view->imapFolders   = $this->application->services['session']->imapFolders;
             $this->view->currentFolder = $currentFolder;
             $this->view->title         = $currentFolder;
-            $this->view->messages      = $mail->fetchAll($page, $limit, $sort, $reverse);
+            $this->view->messages      = $mail->fetchAll($page, $limit, $sort, $reverse, $subject, $from);
             $this->view->mailboxTotal  = $mail->getMailboxTotal();
             $this->view->unread        = $mail->getNumberOfUnread();
             $this->view->mailboxes     = $mail->getMailboxes();

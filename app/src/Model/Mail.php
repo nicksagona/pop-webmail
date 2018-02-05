@@ -223,11 +223,25 @@ class Mail extends AbstractModel
      * @param  int     $limit
      * @param  int     $sort
      * @param  boolean $reverse
+     * @param  string  $subject
+     * @param  string  $from
      * @return array
      */
-    public function fetchAll($page = null, $limit = null, $sort = SORTDATE, $reverse = true)
+    public function fetchAll($page = null, $limit = null, $sort = SORTDATE, $reverse = true, $subject = null, $from = null)
     {
-        $ids                = $this->imap->getMessageIdsBy($sort, $reverse, SE_UID, 'ALL');
+        if (!empty($subject) || !empty($from)) {
+            $search = null;
+            if (!empty($subject)) {
+                $search .= 'SUBJECT "' . $subject . '"';
+            }
+            if (!empty($from)) {
+                $search .= ' FROM "' . $from . '" ';
+            }
+        } else {
+            $search = 'ALL';
+        }
+
+        $ids                = $this->imap->getMessageIdsBy($sort, $reverse, SE_UID, $search);
         $this->mailboxTotal = count($ids);
         $messages           = $this->getMessageOverview($ids, $page, $limit);
         return $messages;
