@@ -480,6 +480,51 @@ class Mail extends AbstractModel
     }
 
     /**
+     * Get message body content for message body
+     *
+     * @param  array   $parts
+     * @param  int     $id
+     * @param  boolean $editor
+     * @return string
+     */
+    public function getContentForMessage($parts = [], $id, $editor = false)
+    {
+        $account     = new Account();
+        $settings    = $account->getById($id);
+        $messageBody = '';
+
+        if (!empty($parts)) {
+            $messageContent = $this->getContent($parts);
+            $messageBody   .= PHP_EOL . PHP_EOL . '----------------------------' . PHP_EOL . PHP_EOL;
+
+            if (isset($messageContent['text'])) {
+                $messageBody .= strip_tags(str_replace(['<br>', '<br />'], ['', ''], $messageContent['text']));
+            } else if (isset($messageContent['fallback'])) {
+                $messageBody .= strip_tags(str_replace(['<br>', '<br />'], ['', ''], $messageContent['fallback']));
+            } else if (isset($messageContent['html'])) {
+                $messageBody .= strip_tags(str_replace(['<br>', '<br />'], ['', ''], $messageContent['html']));
+            }
+
+            if ($editor) {
+                $messageBody = nl2br($messageBody);
+                if (($settings['signature_on_all']) && !empty($settings['html_signature'])) {
+                    $messageBody = '<br /><br />' . $settings['html_signature'] . '<br /><br />' . $messageBody;
+                }
+            } else if (($settings['signature_on_all']) && !empty($settings['text_signature'])) {
+                $messageBody = PHP_EOL . PHP_EOL . $settings['text_signature'] . PHP_EOL . PHP_EOL . $messageBody;
+            }
+        } else {
+            if (($editor) && !empty($settings['html_signature'])) {
+                $messageBody = '<br /><br />' . $settings['html_signature'] . '<br /><br />' . $messageBody;
+            } else if (!empty($settings['text_signature'])) {
+                $messageBody = PHP_EOL . PHP_EOL . $settings['text_signature'] . PHP_EOL . PHP_EOL . $messageBody;
+            }
+        }
+
+        return $messageBody;
+    }
+
+    /**
      * Get message body content
      *
      * @param  array $parts

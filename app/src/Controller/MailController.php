@@ -216,10 +216,16 @@ class MailController extends AbstractController
                     $this->view->form->setFieldValue('subject', 'FWD: ' . $subject);
                 }
 
-                $this->view->form->setFieldValue('message', PHP_EOL . PHP_EOL .
-                    '----------------------------' . PHP_EOL . strip_tags(str_replace(['<br>', '<br />'], [PHP_EOL, PHP_EOL], $mail->getContent($message->parts)))
+                $messageBody = $mail->getContentForMessage(
+                    $message->parts, $this->application->services['session']->currentAccountId, (null !== $this->application->config['editor'])
                 );
+                $this->view->form->setFieldValue('message', $messageBody);
             }
+        } else {
+            $messageBody = $mail->getContentForMessage(
+                [], $this->application->services['session']->currentAccountId, (null !== $this->application->config['editor'])
+            );
+            $this->view->form->setFieldValue('message', $messageBody);
         }
 
         if ($this->request->isPost()) {

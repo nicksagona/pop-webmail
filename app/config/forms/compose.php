@@ -40,7 +40,7 @@ return [
             'type'       => 'textarea',
             'required'   => true,
             'attributes' => [
-                'rows'   => 8,
+                'rows'   => 12,
                 'cols'   => 60,
                 'class'  => 'form-control'
             ]

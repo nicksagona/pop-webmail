@@ -7,8 +7,7 @@ return [
     'routes'         => include 'routes/http.php',
     'database'       => include 'database/sqlite.php',
     'forms'          => include 'forms.php',
-    'editor'         => 'https://cdn.ckeditor.com/4.8.0/standard/ckeditor.js',
-                        // https://cdn.ckeditor.com/4.8.0/standard/ckeditor.js
+    'editor'         => 'https://cdn.ckeditor.com/4.8.0/full/ckeditor.js',
     'pagination'     => 25,
     'services'       => [
         'session'    => 'Pop\Session\Session::getInstance',

@@ -127,6 +127,10 @@
   font-weight: bold;
 }
 
+.mail-compose-div {
+  padding-top: 15px;
+}
+
 table.mail-table > tbody > tr > td {
   border-top: solid 1px #ddd;
 }
@@ -150,6 +154,8 @@ table.mail-table > tbody > tr > td {
 }
 
 #mail-compose-form {
+  margin: 0;
+  padding: 0;
   clear: both;
 }
 
@@ -171,8 +177,8 @@ table.mail-table > tbody > tr > td {
 }
 
 #mail-compose-form-fieldset-1, #mail-compose-form-fieldset-2, #mail-compose-form-fieldset-3 {
-  margin: 10px 0 5px 0;
-  padding: 20px 0 5px 0;
+  margin: 5px 0 5px 0;
+  padding: 10px 0 5px 0;
   clear: both;
   border-top: solid 1px #ddd;
 }
