@@ -113,7 +113,7 @@ class Account extends AbstractModel
             'imap_port'        => (!empty($data['imap_port'])) ? $data['imap_port'] : null,
             'imap_username'    => (!empty($data['imap_username'])) ? $data['imap_username'] : null,
             'imap_password'    => (!empty($data['imap_password'])) ? base64_encode($data['imap_password']) : null,
-            'imap_flags'       => (!empty($data['imap_port'])) ? $data['imap_port'] : null,
+            'imap_flags'       => (!empty($data['imap_flags'])) ? $data['imap_flags'] : null,
             'smtp_host'        => (!empty($data['smtp_host'])) ? $data['smtp_host'] : null,
             'smtp_port'        => (!empty($data['smtp_port'])) ? $data['smtp_port'] : null,
             'smtp_username'    => (!empty($data['smtp_username'])) ? $data['smtp_username'] : null,

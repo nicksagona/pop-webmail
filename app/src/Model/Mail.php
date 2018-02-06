@@ -74,11 +74,12 @@ class Mail extends AbstractModel
         if (!empty($settings['id'])) {
             if (!empty($settings['imap_host']) && !empty($settings['imap_port']) &&
                 !empty($settings['imap_username']) && !empty($settings['imap_password'])) {
+                $flags      = (!empty($settings['imap_flags'])) ? $settings['imap_flags'] : null;
                 $this->imap = new Imap($settings['imap_host'], $settings['imap_port']);
                 $this->imap->setUsername($settings['imap_username'])
                     ->setPassword($settings['imap_password'])
                     ->setFolder($folder)
-                    ->open('/ssl');
+                    ->open($flags);
             }
 
             if (!empty($settings['smtp_host']) && !empty($settings['smtp_port']) &&
