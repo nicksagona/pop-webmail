@@ -22,6 +22,29 @@ pop.toggleMailFolder = function(a) {
     return false;
 };
 
+pop.openMailWindow = function(href, name, opts, id) {
+    $('#subject-span-' + id).prop('class', 'responsive-lg');
+    $('#env-icon-' + id).prop('class', 'gray-link fa fa-envelope-open-o');
+
+    var htmlTitle = $('title')[0].innerHTML;
+    var number     = htmlTitle.substring(htmlTitle.indexOf('(') + 1);
+    number         = parseInt(number.substring(0, number.indexOf(')')));
+    var htmlTitle1 = htmlTitle.substring(0, htmlTitle.indexOf('('));
+    var htmlTitle2 = htmlTitle.substring(htmlTitle.indexOf(')') + 1);
+
+    if (number > 1) {
+        number--;
+        var newTitle = htmlTitle1 + ' (' + number.toString() + ')';
+    } else {
+        var newTitle = htmlTitle1;
+    }
+
+    $('title')[0].innerHTML = newTitle + ' ' + htmlTitle2;
+    $('h1.title-header')[0].innerHTML = newTitle;
+
+    return pop.openWindow(href, name, opts);
+};
+
 pop.closeMail = function() {
     if ($('#dropzone')[0] != undefined) {
         $.ajax('/mail/clean', {
@@ -58,6 +81,21 @@ pop.showPassword = function(a, type) {
     } else {
         $('#' + type + '_password').prop('type', 'password');
         $(a)[0].innerHTML = 'Show';
+    }
+    return false;
+};
+
+pop.showContent = function(a, type) {
+    if (type == 'html') {
+        $('#html-link').prop('class', 'nav-link active');
+        $('#text-link').prop('class', 'nav-link');
+        $('#html-content').show();
+        $('#text-content').hide();
+    } else {
+        $('#html-link').prop('class', 'nav-link');
+        $('#text-link').prop('class', 'nav-link active');
+        $('#html-content').hide();
+        $('#text-content').show();
     }
     return false;
 };

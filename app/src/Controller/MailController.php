@@ -170,6 +170,11 @@ class MailController extends AbstractController
         );
         $this->view->form->setFieldValue('folder', $this->view->folder);
 
+        if (null !== $this->application->config['editor']) {
+            $this->view->editor = $this->application->config['editor'];
+            $this->view->form->setFieldValue('html', 1);
+        }
+
         if (null !== $this->request->getQuery('to')) {
             $this->view->form->setFieldValue('to', $this->request->getQuery('to'));
         }
@@ -244,7 +249,15 @@ class MailController extends AbstractController
                 $dir->emptyDir(true);
             }
 
-            $message->setBody($this->request->getPost('message'));
+            $messageBody = html_entity_decode($this->request->getPost('message'), ENT_QUOTES, 'UTF-8');
+
+            if ($this->request->getPost('html')) {
+                $message->addText(strip_tags($messageBody));
+                $message->addHtml($messageBody);
+            } else {
+                $message->setBody($messageBody);
+            }
+
             $mail->mailer()->send($message);
 
             $this->view->sent = true;

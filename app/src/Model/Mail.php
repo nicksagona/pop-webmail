@@ -483,14 +483,18 @@ class Mail extends AbstractModel
      * Get message body content
      *
      * @param  array $parts
-     * @return string
+     * @return array
      */
     public function getContent($parts)
     {
         $text         = null;
         $html         = null;
-        $fallBack     = null;
-        $foundContent = null;
+        $fallback     = null;
+        $foundContent = [
+            'html'     => null,
+            'text'     => null,
+            'fallback' => null
+        ];
 
         foreach ($parts as $i => $part) {
             if (!$part->attachment) {
@@ -506,7 +510,7 @@ class Mail extends AbstractModel
                 if ($part->type == 'text/html') {
                     $html = $content;
                 } else if ($part->type == 'text/plain') {
-                    $text = $content;
+                    $text = nl2br($content);
                 } else if ($part->type == 'multipart/alternative') {
                     if (isset($part->headers['Content-Type']) && (strpos($part->headers['Content-Type'], 'boundary=') !== false)) {
                         $boundary = str_replace('"', '', substr($part->headers['Content-Type'], (strpos($part->headers['Content-Type'], 'boundary=') + 9)));
@@ -522,23 +526,26 @@ class Mail extends AbstractModel
                                 if (strpos($text, "\r\n\r\n") !== false) {
                                     $text = substr($text, (strpos($text, "\r\n\r\n") + 4));
                                 }
+                                $text = nl2br($text);
                             }
                         }
                     } else {
                         $text = $content;
                     }
                 } else {
-                    $fallBack = $content;
+                    $fallback = $content;
                 }
             }
         }
 
         if (null !== $html) {
-            $foundContent = $html;
-        } else if (null !== $text) {
-            $foundContent = $text;
-        } else if (null !== $fallBack) {
-            $foundContent = $fallBack;
+            $foundContent['html'] = $html;
+        }
+        if (null !== $text) {
+            $foundContent['text'] = $text;
+        }
+        if (null !== $fallback) {
+            $foundContent['fallback'] = $fallback;
         }
 
         return $foundContent;

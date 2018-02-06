@@ -40,7 +40,7 @@ return [
             'type'       => 'textarea',
             'required'   => true,
             'attributes' => [
-                'rows'   => 12,
+                'rows'   => 8,
                 'cols'   => 60,
                 'class'  => 'form-control'
             ]
@@ -65,6 +65,10 @@ return [
         'folder' => [
             'type'  => 'hidden',
             'value' => '',
+        ],
+        'html' => [
+            'type'  => 'hidden',
+            'value' => '0',
         ]
     ]
 ];

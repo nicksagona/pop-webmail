@@ -20,4 +20,7 @@ include __DIR__ . '/../inc/header-no-nav.phtml';
         </div>
 <?php endif; ?>
     </div>
+<?php if (isset($editor)): ?>
+<?php include __DIR__ . '/inc/editor.phtml'; ?>
+<?php endif; ?>
 <?php include __DIR__ . '/../inc/no-footer.phtml'; ?>

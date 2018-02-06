@@ -67,7 +67,39 @@ echo implode(', ', $ccAddresses);
 <?php endif; ?>
                     <tr>
                         <td colspan="2">
-<?=$content; ?>
+<?php if (!empty($content['html']) && !empty($content['text'])): ?>
+<?php if (stripos($content['html'], '<img') !== false): ?>
+        <span class="pull-right text-right small"><em>This email contains images. <a href="<?=$_SERVER['REQUEST_URI']; ?>?images=1">View images</a>.</em></span>
+<?php endif; ?>
+                            <ul class="nav nav-tabs mail-view-nav">
+                                <li class="nav-item"><a href="#" id="html-link" class="nav-link active" onclick="return pop.showContent(this, 'html');">HTML</a></li>
+                                <li class="nav-item"><a href="#" id="text-link" class="nav-link" onclick="return pop.showContent(this, 'text');">Text</a></li>
+                            </ul>
+                            <div id="html-content">
+<?php if (!isset($_GET['images'])) :?>
+<?=preg_replace('/(<*[^>]*src=)"[^>]+"([^>]*>)/', '\1""\2', $content['html']); ?>
+<?php else: ?>
+<?=$content['html']; ?>
+<?php endif; ?>
+                            </div>
+
+                            <div id="text-content">
+<?=$content['text']; ?>
+                            </div>
+<?php elseif (!empty($content['html'])): ?>
+<?php if (stripos($content['html'], '<img') !== false): ?>
+                            <span class="pull-right text-right small"><em>This email contains images. <a href="<?=$_SERVER['REQUEST_URI']; ?>?images=1">View images</a>.</em></span>
+<?php endif; ?>
+<?php if (!isset($_GET['images'])) :?>
+<?=preg_replace('/(<*[^>]*src=)"[^>]+"([^>]*>)/', '\1""\2', $content['html']); ?>
+<?php else: ?>
+<?=$content['html']; ?>
+<?php endif; ?>
+<?php elseif (!empty($content['text'])): ?>
+<?=$content['text']; ?>
+<?php elseif (!empty($content['fallback'])): ?>
+<?=$content['fallback']; ?>
+<?php endif; ?>
                         </td>
                     </tr>
                 </tbody>

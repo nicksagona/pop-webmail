@@ -1,8 +1,9 @@
 TO-DO
 =====
 
-- WYSIWYG
-- Better HTML/Text selection support, mobile devices, etc.
+- WYSIWYG [DONE]
+- Better HTML/Text selection support, mobile devices, etc. [DONE]
+- Block HTML images [DONE]
 - Signature support
 - Display # of unread in folders
 - 3rd level of folders CSS

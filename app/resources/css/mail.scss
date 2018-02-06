@@ -123,6 +123,10 @@
   float: right;
 }
 
+.bold {
+  font-weight: bold;
+}
+
 table.mail-table > tbody > tr > td {
   border-top: solid 1px #ddd;
 }
@@ -327,6 +331,13 @@ label[for="search_before"] {
   display: inline;
 }
 
+#text-content {
+  display: none;
+  font-family: "Courier New", serif;
+  font-size: 0.9em;
+  word-wrap: break-word;
+}
+
 .process-btn {
   display: inline;
 }
@@ -482,5 +493,15 @@ label[for="search_before"] {
     margin: 0 auto 15px auto;
     width: 100%;
     display: block;
+  }
+
+  #html-content, .mail-view-nav {
+    display: none;
+  }
+
+  #text-content {
+    display: block;
+    font-family: "Courier New", serif;
+    font-size: 0.9em;
   }
 }
