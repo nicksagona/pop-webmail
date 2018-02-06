@@ -127,6 +127,24 @@ table.mail-table > tbody > tr > td {
   border-top: solid 1px #ddd;
 }
 
+#account-form-fieldset-2 {
+  margin-right: 2%;
+  padding-right: 2%;
+  float: left;
+  width: 48%;
+  border-right: solid 1px #ddd;
+}
+
+#account-form-fieldset-3 {
+  width: 50%;
+}
+
+#account-form-fieldset-5 > dl > dt > label {
+  display: block;
+  width: 100%;
+  border-bottom: solid 1px #ddd;
+}
+
 #mail-compose-form {
   clear: both;
 }
@@ -381,6 +399,20 @@ label[for="search_before"] {
 
 .mail-nav-bottom-div {
   display: none;
+}
+
+@media (max-width: 992px) {
+  #account-form-fieldset-2 {
+    margin-right: 0;
+    padding-right: 0;
+    float: none;
+    width: 100%;
+    border-right: none;
+  }
+
+  #account-form-fieldset-3 {
+    width: 100%;
+  }
 }
 
 @media (max-width: 768px) {

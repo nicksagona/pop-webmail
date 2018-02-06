@@ -48,11 +48,15 @@ CREATE TABLE IF NOT EXISTS "accounts" (
   "imap_port" varchar,
   "imap_username" varchar,
   "imap_password" varchar,
+  "imap_flags" varchar,
   "smtp_host" varchar,
   "smtp_port" varchar,
   "smtp_username" varchar,
   "smtp_password" varchar,
   "smtp_security" varchar,
+  "html_signature" varchar,
+  "text_signature" varchar,
+  "signature_on_all" integer,
   "default" integer,
   UNIQUE ("id")
 ) ;

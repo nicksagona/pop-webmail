@@ -34,8 +34,16 @@ return [
             ]
         ],
         'imap_password' => [
+            'type'       => 'password',
+            'label'      => 'IMAP Password <span class="normal small">(<a href="#" onclick="return pop.showPassword(this, \'imap\');">Show</a>)</span>',
+            'attributes' => [
+                'class'  => 'form-control'
+            ],
+            'render'     => true
+        ],
+        'imap_flags' => [
             'type'       => 'text',
-            'label'      => 'IMAP Password',
+            'label'      => 'IMAP Flags <span class="normal">(/ssl, /tls, etc.)</span>',
             'attributes' => [
                 'class'  => 'form-control'
             ]
@@ -64,17 +72,38 @@ return [
             ]
         ],
         'smtp_password' => [
-            'type'       => 'text',
-            'label'      => 'SMTP Password',
+            'type'       => 'password',
+            'label'      => 'SMTP Password <span class="normal small">(<a href="#" onclick="return pop.showPassword(this, \'smtp\');">Show</a>)</span>',
             'attributes' => [
                 'class'  => 'form-control'
-            ]
+            ],
+            'render'     => true
         ],
         'smtp_security' => [
             'type'       => 'text',
-            'label'      => 'SMTP Security',
+            'label'      => 'SMTP Security <span class="normal">(tls, ssl, etc.)</span>',
             'attributes' => [
                 'class'  => 'form-control'
+            ]
+        ]
+    ],
+    'Signature Settings' => [
+        'html_signature' => [
+            'type'       => 'textarea',
+            'label'      => 'HTML Signature',
+            'attributes' => [
+                'class'  => 'form-control',
+                'rows'   => 6,
+                'cols'   => 20
+            ]
+        ],
+        'text_signature' => [
+            'type'       => 'textarea',
+            'label'      => 'Text Signature',
+            'attributes' => [
+                'class'  => 'form-control',
+                'rows'   => 6,
+                'cols'   => 20
             ]
         ]
     ],
@@ -86,6 +115,13 @@ return [
                 1 => 'Default Account?'
             ]
         ],
+        'signature_on_all' => [
+            'type'   => 'checkbox',
+            'label'  => '&nbsp;',
+            'values' => [
+                1 => 'Signature on Replies/Forwards?'
+            ]
+        ],
         'id' => [
             'type'  => 'hidden',
             'value' => 0,
@@ -93,7 +129,6 @@ return [
         'submit' => [
             'type'  => 'submit',
             'value' => 'Save',
-            'label' => '&nbsp;',
             'attributes' => [
                 'class'  => 'btn btn-md btn-info btn-block text-uppercase login-btn'
             ]

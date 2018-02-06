@@ -626,6 +626,10 @@ a.home {
   white-space: nowrap;
 }
 
+.normal {
+  font-weight: normal;
+}
+
 .rm-col {
   width: 10%;
   text-align: center;
@@ -662,7 +666,7 @@ a.home {
 .form-left-column {
   margin: 0;
   padding: 0 30px 0 0;
-  width: calc(100% - 210px);
+  width: calc(100% - 260px);
   float: left;
   border-right: solid 1px $table-head-border-color;
 }
@@ -671,7 +675,7 @@ a.home {
   position: relative;
   margin: 28px 0 0 30px;
   padding: 50px 0 0 0;
-  width: 180px;
+  width: 230px;
   float: right;
 }
 

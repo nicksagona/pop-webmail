@@ -108,17 +108,21 @@ class Account extends AbstractModel
         }
 
         $account = new Table\Accounts([
-            'name'          => html_entity_decode(strip_tags($data['name']), ENT_QUOTES, 'UTF-8'),
-            'imap_host'     => (!empty($data['imap_host'])) ? $data['imap_host'] : null,
-            'imap_port'     => (!empty($data['imap_port'])) ? $data['imap_port'] : null,
-            'imap_username' => (!empty($data['imap_username'])) ? $data['imap_username'] : null,
-            'imap_password' => (!empty($data['imap_password'])) ? base64_encode($data['imap_password']) : null,
-            'smtp_host'     => (!empty($data['smtp_host'])) ? $data['smtp_host'] : null,
-            'smtp_port'     => (!empty($data['smtp_port'])) ? $data['smtp_port'] : null,
-            'smtp_username' => (!empty($data['smtp_username'])) ? $data['smtp_username'] : null,
-            'smtp_password' => (!empty($data['smtp_password'])) ? base64_encode($data['smtp_password']) : null,
-            'smtp_security' => (!empty($data['smtp_security'])) ? $data['smtp_security'] : null,
-            'default'       => (!empty($data['default'])) ? 1 : 0
+            'name'             => html_entity_decode(strip_tags($data['name']), ENT_QUOTES, 'UTF-8'),
+            'imap_host'        => (!empty($data['imap_host'])) ? $data['imap_host'] : null,
+            'imap_port'        => (!empty($data['imap_port'])) ? $data['imap_port'] : null,
+            'imap_username'    => (!empty($data['imap_username'])) ? $data['imap_username'] : null,
+            'imap_password'    => (!empty($data['imap_password'])) ? base64_encode($data['imap_password']) : null,
+            'imap_flags'       => (!empty($data['imap_port'])) ? $data['imap_port'] : null,
+            'smtp_host'        => (!empty($data['smtp_host'])) ? $data['smtp_host'] : null,
+            'smtp_port'        => (!empty($data['smtp_port'])) ? $data['smtp_port'] : null,
+            'smtp_username'    => (!empty($data['smtp_username'])) ? $data['smtp_username'] : null,
+            'smtp_password'    => (!empty($data['smtp_password'])) ? base64_encode($data['smtp_password']) : null,
+            'smtp_security'    => (!empty($data['smtp_security'])) ? $data['smtp_security'] : null,
+            'html_signature'   => (!empty($data['html_signature'])) ? $data['html_signature'] : null,
+            'text_signature'   => (!empty($data['text_signature'])) ? $data['text_signature'] : null,
+            'signature_on_all' => (!empty($data['signature_on_all'])) ? 1 : 0,
+            'default'          => (!empty($data['default'])) ? 1 : 0
         ]);
         $account->save();
 
@@ -145,17 +149,21 @@ class Account extends AbstractModel
                 }
             }
 
-            $account->name          = (!empty($data['name'])) ? html_entity_decode(strip_tags($data['name']), ENT_QUOTES, 'UTF-8') : $account->name;
-            $account->imap_host     = (!empty($data['imap_host'])) ? $data['imap_host'] : $account->imap_host;
-            $account->imap_port     = (!empty($data['imap_port'])) ? $data['imap_port'] : $account->imap_port;
-            $account->imap_username = (!empty($data['imap_username'])) ? $data['imap_username'] : $account->imap_username;
-            $account->imap_password = (!empty($data['imap_password'])) ? base64_encode($data['imap_password']) : $account->imap_password;
-            $account->smtp_host     = (!empty($data['smtp_host'])) ? $data['smtp_host'] : $account->smtp_host;
-            $account->smtp_port     = (!empty($data['smtp_port'])) ? $data['smtp_port'] : $account->smtp_port;
-            $account->smtp_username = (!empty($data['smtp_username'])) ? $data['smtp_username'] : $account->smtp_username;
-            $account->smtp_password = (!empty($data['smtp_password'])) ? base64_encode($data['smtp_password']) : $account->smtp_password;
-            $account->smtp_security = (!empty($data['smtp_security'])) ? $data['smtp_security'] : $account->smtp_security;
-            $account->default       = (!empty($data['imap_host'])) ? 1 : $account->default;
+            $account->name             = (!empty($data['name'])) ? html_entity_decode(strip_tags($data['name']), ENT_QUOTES, 'UTF-8') : $account->name;
+            $account->imap_host        = (!empty($data['imap_host'])) ? $data['imap_host'] : null;
+            $account->imap_port        = (!empty($data['imap_port'])) ? $data['imap_port'] : null;
+            $account->imap_username    = (!empty($data['imap_username'])) ? $data['imap_username'] : null;
+            $account->imap_password    = (!empty($data['imap_password'])) ? base64_encode($data['imap_password']) : null;
+            $account->imap_flags       = (!empty($data['imap_flags'])) ? $data['imap_flags'] : null;
+            $account->smtp_host        = (!empty($data['smtp_host'])) ? $data['smtp_host'] : null;
+            $account->smtp_port        = (!empty($data['smtp_port'])) ? $data['smtp_port'] : null;
+            $account->smtp_username    = (!empty($data['smtp_username'])) ? $data['smtp_username'] : null;
+            $account->smtp_password    = (!empty($data['smtp_password'])) ? base64_encode($data['smtp_password']) : null;
+            $account->smtp_security    = (!empty($data['smtp_security'])) ? $data['smtp_security'] : null;
+            $account->html_signature   = (!empty($data['html_signature'])) ? $data['html_signature'] : null;
+            $account->text_signature   = (!empty($data['text_signature'])) ? $data['text_signature'] : null;
+            $account->signature_on_all = (!empty($data['signature_on_all'])) ? 1 : $account->signature_on_all;
+            $account->default          = (!empty($data['imap_host'])) ? 1 : $account->default;
             $account->save();
 
             $accountData = $account->toArray();

@@ -63,12 +63,11 @@ class AccountsController extends AbstractController
         $this->view->form = Form\Mail\Account::createFromFieldsetConfig(
             $this->application->config['forms']['PopWebmail\Form\Mail\Account']
         );
-        $this->view->form->addColumn([1, 2, 3], 'form-left-column')
-            ->addColumn(4, 'form-right-column');
+        $this->view->form->addColumn([1, 2, 3, 4], 'form-left-column')
+            ->addColumn(5, 'form-right-column');
 
         if ($this->request->isPost()) {
-            $this->view->form->addFilter('strip_tags')
-                ->setFieldValues($this->request->getPost());
+            $this->view->form->setFieldValues($this->request->getPost());
 
             if ($this->view->form->isValid()) {
                 $this->view->form->clearFilters()
@@ -101,12 +100,11 @@ class AccountsController extends AbstractController
         $this->view->form = Form\Mail\Account::createFromFieldsetConfig(
             $this->application->config['forms']['PopWebmail\Form\Mail\Account']
         );
-        $this->view->form->addColumn([1, 2, 3], 'form-left-column')
-            ->addColumn(4, 'form-right-column');
+        $this->view->form->addColumn([1, 2, 3, 4], 'form-left-column')
+            ->addColumn(5, 'form-right-column');
 
         if ($this->request->isPost()) {
-            $this->view->form->addFilter('strip_tags')
-                ->setFieldValues($this->request->getPost());
+            $this->view->form->setFieldValues($this->request->getPost());
 
             if ($this->view->form->isValid()) {
                 $this->view->form->clearFilters()

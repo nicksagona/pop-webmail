@@ -51,6 +51,17 @@ pop.closeMailForm = function(a) {
     return false;
 };
 
+pop.showPassword = function(a, type) {
+    if ($('#' + type + '_password').prop('type') == 'password') {
+        $('#' + type + '_password').prop('type', 'text');
+        $(a)[0].innerHTML = 'Hide';
+    } else {
+        $('#' + type + '_password').prop('type', 'password');
+        $(a)[0].innerHTML = 'Show';
+    }
+    return false;
+};
+
 Dropzone.autoDiscover = false;
 
 $(document).ready(function(){

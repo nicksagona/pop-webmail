@@ -4,7 +4,7 @@ include __DIR__ . '/../inc/header.phtml';
 ?>
     <div class="container-fluid main-dashboard">
         <div class="col-md-12">
-<?php if (count($accounts) > 0): ?>
+<?php if (count($accounts) > 1): ?>
             <select name="accounts_select" id="accounts_select" class="form-control form-control-sm form-control-inline accounts-select">
 <?php foreach ($accounts as $account): ?>
                 <option value="<?=$account['id']; ?>"<?=($currentAccountId == $account['id']) ? ' selected="selected"' : ''; ?>><?=$account['name']; ?><?=($account['default']) ? ' (Default)' : ''?></option>

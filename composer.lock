@@ -226,16 +226,16 @@
         },
         {
             "name": "popphp/pop-form",
-            "version": "3.1.6",
+            "version": "3.1.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/popphp/pop-form.git",
-                "reference": "45269bfa3081717fc834e9a31f75273167683e74"
+                "reference": "4527118ff2f8b80110720bb604b8eb3b794678a0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/popphp/pop-form/zipball/45269bfa3081717fc834e9a31f75273167683e74",
-                "reference": "45269bfa3081717fc834e9a31f75273167683e74",
+                "url": "https://api.github.com/repos/popphp/pop-form/zipball/4527118ff2f8b80110720bb604b8eb3b794678a0",
+                "reference": "4527118ff2f8b80110720bb604b8eb3b794678a0",
                 "shasum": ""
             },
             "require": {
@@ -284,7 +284,7 @@
                 "pop",
                 "pop php"
             ],
-            "time": "2018-01-29T21:34:55+00:00"
+            "time": "2018-02-06T16:59:46+00:00"
         },
         {
             "name": "popphp/pop-http",
