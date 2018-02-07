@@ -1,6 +1,25 @@
 /**
  * mail.js
  */
+pop.expressSettings = {
+    "gmail" : {
+        "imap_host"     : "imap.gmail.com",
+        "imap_port"     : 993,
+        "imap_flags"    : "/ssl",
+        "smtp_host"     : "smtp.gmail.com",
+        "smtp_port"     : 587,
+        "smtp_security" : "tls"
+    },
+    "office-365" : {
+        "imap_host"     : "outlook.office365.com",
+        "imap_port"     : 993,
+        "imap_flags"    : "/ssl",
+        "smtp_host"     : "smtp.office365.com",
+        "smtp_port"     : 587,
+        "smtp_security" : "tls"
+    }
+};
+
 pop.changeMailbox = function() {
     window.location.href = '/mail/box/' + $('#accounts_select').val();
 };
@@ -100,6 +119,28 @@ pop.showContent = function(a, type) {
     return false;
 };
 
+pop.expressSetup = function() {
+    var account = $('#express_setup').val();
+    if (account != '----') {
+        if (pop.expressSettings[account] != undefined) {
+            $('#imap_host').val(pop.expressSettings[account]["imap_host"]);
+            $('#imap_port').val(pop.expressSettings[account]["imap_port"]);
+            $('#imap_flags').val(pop.expressSettings[account]["imap_flags"]);
+            $('#smtp_host').val(pop.expressSettings[account]["smtp_host"]);
+            $('#smtp_port').val(pop.expressSettings[account]["smtp_port"]);
+            $('#smtp_security').val(pop.expressSettings[account]["smtp_security"]);
+        }
+    } else {
+        $('#imap_host').val('');
+        $('#imap_port').val('');
+        $('#imap_flags').val('');
+        $('#smtp_host').val('');
+        $('#smtp_port').val('');
+        $('#smtp_security').val('');
+
+    }
+};
+
 Dropzone.autoDiscover = false;
 
 $(document).ready(function(){
@@ -138,6 +179,11 @@ $(document).ready(function(){
             return confirm('This action cannot be undone. Are you sure?');
         });
     }
+
+    if ($('#express_setup')[0] != undefined) {
+        $('#express_setup').change(pop.expressSetup);
+    }
+
 
     if ($('#dropzone')[0] != undefined) {
         $('#dropzone').dropzone({

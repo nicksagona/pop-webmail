@@ -2,6 +2,11 @@
     <div class="container-fluid main-dashboard">
         <div class="col-md-12">
             <h1 class="title-header"><?=$title;?></h1>
+            <select name="express_setup" id="express_setup" class="form-control form-control-inline form-control-sm pull-right express-setup">
+                <option value="----">[Express Setup]</option>
+                <option value="gmail">Gmail</option>
+                <option value="office-365">Office 365</option>
+            </select>
             <nav class="btn-nav">
                 <nav><a class="btn-sm text-uppercase" href="/mail/accounts/create">+ Add</a></nav>
                 <nav><a class="btn-sm text-uppercase" href="/mail/accounts">Back</a></nav>
