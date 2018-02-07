@@ -46,18 +46,18 @@ class Mail extends AbstractModel
     protected $mailer = null;
 
     /**
+     * IMAP flags
+     *
+     * @var string
+     */
+    protected $imapFlags = null;
+
+    /**
      * Mailboxes
      *
      * @var array
      */
-    protected $mailboxes = null;
-
-    /**
-     * Current mailbox total
-     *
-     * @var int
-     */
-    protected $mailboxTotal = null;
+    protected $mailboxes = [];
 
     /**
      * Load account
@@ -74,12 +74,12 @@ class Mail extends AbstractModel
         if (!empty($settings['id'])) {
             if (!empty($settings['imap_host']) && !empty($settings['imap_port']) &&
                 !empty($settings['imap_username']) && !empty($settings['imap_password'])) {
-                $flags      = (!empty($settings['imap_flags'])) ? $settings['imap_flags'] : null;
-                $this->imap = new Imap($settings['imap_host'], $settings['imap_port']);
+                $this->imapFlags = (!empty($settings['imap_flags'])) ? $settings['imap_flags'] : null;
+                $this->imap      = new Imap($settings['imap_host'], $settings['imap_port']);
                 $this->imap->setUsername($settings['imap_username'])
                     ->setPassword($settings['imap_password'])
                     ->setFolder($folder)
-                    ->open($flags);
+                    ->open($this->imapFlags);
             }
 
             if (!empty($settings['smtp_host']) && !empty($settings['smtp_port']) &&
@@ -218,16 +218,14 @@ class Mail extends AbstractModel
     }
 
     /**
-     * Fetch all mail
+     * Fetch all mail message IDs
      *
-     * @param  int     $page
-     * @param  int     $limit
      * @param  int     $sort
      * @param  boolean $reverse
      * @param  array   $search
      * @return array
      */
-    public function fetchAll($page = null, $limit = null, $sort = SORTDATE, $reverse = true, array $search = null)
+    public function fetchAllMessageIds($sort = SORTDATE, $reverse = true, array $search = null)
     {
         $searchString = '';
         if (!empty($search)) {
@@ -248,44 +246,44 @@ class Mail extends AbstractModel
             $searchString .= 'ALL';
         }
 
-        $ids                = $this->imap->getMessageIdsBy($sort, $reverse, SE_UID, $searchString);
-        $this->mailboxTotal = count($ids);
-        $messages           = $this->getMessageOverview($ids, $page, $limit);
-        return $messages;
+        $ids = $this->imap->getMessageIdsBy($sort, $reverse, SE_UID, $searchString);
+
+        return $ids;
     }
 
     /**
-     * Fetch mail by subject
+     * Fetch all mail messages
      *
-     * @param  string  $subject
-     * @param  int     $page
-     * @param  int     $limit
-     * @param  int     $sort
-     * @param  boolean $reverse
+     * @param  array $ids
+     * @param  int   $page
+     * @param  int   $limit
      * @return array
      */
-    public function fetchBySubject($subject, $page = null, $limit = null, $sort = SORTDATE, $reverse = true)
+    public function fetchAllMessages(array $ids, $page = null, $limit = null)
     {
-        $ids      = $this->imap->getMessageIdsBy($sort, $reverse, SE_UID, 'SUBJECT "' . $subject . '"');
-        $messages = $this->getMessageOverview($ids, $page, $limit);
-        return $messages;
+        return $this->getMessageOverview($ids, $page, $limit);
     }
 
     /**
-     * Fetch mail by from address
+     * Fetch mail headers by id
      *
-     * @param  string  $from
-     * @param  int     $page
-     * @param  int     $limit
-     * @param  int     $sort
-     * @param  boolean $reverse
-     * @return array
+     * @param  int $id
+     * @return \stdClass
      */
-    public function fetchFrom($from, $page = null, $limit = null, $sort = SORTDATE, $reverse = true)
+    public function fetchHeadersById($id)
     {
-        $ids      = $this->imap->getMessageIdsBy($sort, $reverse, SE_UID, 'FROM "' . $from . '"');
-        $messages = $this->getMessageOverview($ids, $page, $limit);
-        return $messages;
+        $this->imap->markAsRead($id);
+
+        $headers = $this->imap->getMessageHeadersById($id);
+
+        if (!isset($headers->subject) && isset($headers->Subject)) {
+            $headers->subject = $headers->Subject;
+        }
+        if (!isset($headers->Subject) && isset($headers->subject)) {
+            $headers->Subject = $headers->subject;
+        }
+
+        return $headers;
     }
 
     /**
@@ -418,7 +416,7 @@ class Mail extends AbstractModel
      */
     public function getMailboxTotal()
     {
-        return $this->mailboxTotal;
+        return $this->imap->getNumberOfMessages();
     }
 
     /**
@@ -733,7 +731,7 @@ class Mail extends AbstractModel
      */
     public function hasPages($limit)
     {
-        return ((int)$this->mailboxTotal > $limit);
+        return ((int)$this->imap->getNumberOfMessages() > $limit);
     }
 
     /**
@@ -741,9 +739,10 @@ class Mail extends AbstractModel
      *
      * @param  string $folder
      * @param  array  $result
+     * @param  string $parent
      * @return void
      */
-    protected function parseFolders($folder, &$result)
+    protected function parseFolders($folder, &$result, $parent = null)
     {
         if (strpos($folder, '}') !== false) {
             $folder = substr($folder, (strpos($folder, '}') + 1));
@@ -754,13 +753,20 @@ class Mail extends AbstractModel
             if (!isset($result[$f])) {
                 $result[$f] = [
                     'folder'     => $f,
+                    'unread'     => 0,
                     'subfolders' => []
                 ];
             }
-            $this->parseFolders($s, $result[$f]['subfolders']);
+            $currentFolder = (null !== $parent) ? $parent . '/' . $f : $f;
+            //$this->imap->setFolder($currentFolder)->open($this->imapFlags);
+            //$result[$f]['unread'] = $this->imap->getNumberOfUnreadMessages();
+            $this->parseFolders($s, $result[$f]['subfolders'], $f);
         } else {
+            $currentFolder = (null !== $parent) ? $parent . '/' . $folder : $folder;
+            //$this->imap->setFolder($currentFolder)->open($this->imapFlags);
             $result[$folder] = [
                 'folder'     => $folder,
+                'unread'     => 0, //$this->imap->getNumberOfUnreadMessages(),
                 'subfolders' => []
             ];
         }

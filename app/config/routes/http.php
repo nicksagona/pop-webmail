@@ -29,6 +29,10 @@ return [
         'controller' => 'PopWebmail\Controller\MailController',
         'action'     => 'attachments'
     ],
+    '/mail/cc/:id' => [
+        'controller' => 'PopWebmail\Controller\MailController',
+        'action'     => 'cc'
+    ],
     '/mail/compose[/]' => [
         'controller' => 'PopWebmail\Controller\MailController',
         'action'     => 'compose'

@@ -42,24 +42,26 @@ pop.toggleMailFolder = function(a) {
 };
 
 pop.openMailWindow = function(href, name, opts, id) {
-    $('#subject-span-' + id).prop('class', 'responsive-lg');
-    $('#env-icon-' + id).prop('class', 'gray-link fa fa-envelope-open-o');
+    if ($('#env-icon-' + id).prop('class') != 'gray-link fa fa-envelope-open-o') {
+        $('#subject-span-' + id).prop('class', 'responsive-lg');
+        $('#env-icon-' + id).prop('class', 'gray-link fa fa-envelope-open-o');
 
-    var htmlTitle = $('title')[0].innerHTML;
-    var number     = htmlTitle.substring(htmlTitle.indexOf('(') + 1);
-    number         = parseInt(number.substring(0, number.indexOf(')')));
-    var htmlTitle1 = htmlTitle.substring(0, htmlTitle.indexOf('('));
-    var htmlTitle2 = htmlTitle.substring(htmlTitle.indexOf(')') + 1);
+        var htmlTitle = $('title')[0].innerHTML;
+        var number     = htmlTitle.substring(htmlTitle.indexOf('(') + 1);
+        number         = parseInt(number.substring(0, number.indexOf(')')));
+        var htmlTitle1 = htmlTitle.substring(0, htmlTitle.indexOf('('));
+        var htmlTitle2 = htmlTitle.substring(htmlTitle.indexOf(')') + 1);
 
-    if (number > 1) {
-        number--;
-        var newTitle = htmlTitle1 + ' (' + number.toString() + ')';
-    } else {
-        var newTitle = htmlTitle1;
+        if (number > 1) {
+            number--;
+            var newTitle = htmlTitle1 + ' (' + number.toString() + ')';
+        } else {
+            var newTitle = htmlTitle1;
+        }
+
+        $('title')[0].innerHTML = newTitle + ' ' + htmlTitle2;
+        $('h1.title-header')[0].innerHTML = newTitle;
     }
-
-    $('title')[0].innerHTML = newTitle + ' ' + htmlTitle2;
-    $('h1.title-header')[0].innerHTML = newTitle;
 
     return pop.openWindow(href, name, opts);
 };

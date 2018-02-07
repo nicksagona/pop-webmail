@@ -1,0 +1,36 @@
+<?php include __DIR__ . '/../inc/functions.php'; ?>
+<?php include __DIR__ . '/../inc/header-no-nav.phtml'; ?>
+    <div class="container-fluid main-dashboard">
+        <div class="col-md-12">
+            <div class="mail-nav">
+                <a class="btn-md btn-secondary" title="Close" href="#" onclick="window.close(); return false;"><i class="fa fa-close fa-lg"></i></a>
+            </div>
+            <table class="table mail-table" cellpadding="0" cellspacing="0" border="0">
+                <thead>
+                    <tr><th colspan="2"><h3 class="title-header clear-both"><?=$title;?></h3></th></tr>
+                    <tr><th>#</th><th>CC Address</th></tr>
+                </thead>
+                <tbody>
+<?php if (isset($headers->cc) && (count($headers->cc) > 0)): ?>
+<?php foreach ($headers->cc as  $i => $cc): ?>
+                    <tr>
+                        <td>
+                            <?=$i + 1; ?>
+                        </td>
+                        <td><?php
+$ccAddress = null;
+    if (isset($cc->personal)):
+        $ccAddress = '<a href="/mail/compose?id=' . $id . '&to=' . $cc->mailbox . '@' . $cc->host . '">' . $cc->personal . ' &lt;' . $cc->mailbox . '@' . $cc->host . '&gt;</a>';
+    else:
+        $ccAddress = '<a href="/mail/compose?id=' . $id . '&to=' . $cc->mailbox . '@' . $cc->host . '">' . $cc->mailbox . '@' . $cc->host . '</a>';
+    endif;
+    echo $ccAddress; ?>
+                        </td>
+                    </tr>
+<?php endforeach; ?>
+<?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+<?php include __DIR__ . '/../inc/no-footer.phtml'; ?>

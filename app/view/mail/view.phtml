@@ -21,14 +21,20 @@
                         </td>
                         <td><?php
 $toAddresses = [];
-foreach ($message->headers->to as $to):
-    if (isset($to->personal)):
-        $toAddresses[] = '<a href="/mail/compose?id=' . $id . '&to=' . $to->mailbox . '@' . $to->host . '">' . $to->personal . ' &lt;' . $to->mailbox . '@' . $to->host . '&gt;</a>';
-    else:
-        $toAddresses[] = '<a href="/mail/compose?id=' . $id . '&to=' . $to->mailbox . '@' . $to->host . '">' . $to->mailbox . '@' . $to->host . '</a>';
-    endif;
-endforeach;
-echo implode(', ', $toAddresses);
+if (isset($message->headers->to)):
+    foreach ($message->headers->to as $to):
+        if (isset($to->personal)):
+            $toAddresses[] = '<a href="/mail/compose?id=' . $id . '&to=' . $to->mailbox . '@' . $to->host . '">' . $to->personal . ' &lt;' . $to->mailbox . '@' . $to->host . '&gt;</a>';
+        else:
+            $toAddresses[] = '<a href="/mail/compose?id=' . $id . '&to=' . $to->mailbox . '@' . $to->host . '">' . $to->mailbox . '@' . $to->host . '</a>';
+        endif;
+    endforeach;
+endif;
+if (count($toAddresses) > 0):
+    echo implode(', ', $toAddresses);
+else:
+    echo 'N/A';
+endif;
 ?></td>
                     </tr>
 <?php if (isset($message->headers->cc) && (count($message->headers->cc) > 0)): ?>
@@ -44,8 +50,14 @@ foreach ($message->headers->cc as $cc):
     else:
         $ccAddresses[] = '<a href="/mail/compose?id=' . $id . '&to=' . $cc->mailbox . '@' . $cc->host . '">' . $cc->mailbox . '@' . $cc->host . '</a>';
     endif;
+    if (count($ccAddresses) == 10):
+        break;
+    endif;
 endforeach;
 echo implode(', ', $ccAddresses);
+if (count($message->headers->cc) > 10):
+    echo '... <em>(<a href="#" onclick="pop.openWindow(\'/mail/cc/' . $id . '\', \'pop-mail-cc\', {width: 800, height: 900}); return false;">' . count($message->headers->cc) . ' Total</a>)</em>';
+endif;
 ?></td>
                     </tr>
 <?php endif; ?>

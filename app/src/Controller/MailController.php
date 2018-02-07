@@ -80,28 +80,29 @@ class MailController extends AbstractController
         $mail->loadAccount($this->application->services['session']->currentAccountId);
 
         if ($mail->isImapLoaded()) {
+            if (!isset($this->application->services['session']->imapFolders)) {
+                $this->application->services['session']->imapFolders = $mail->getFolders();
+                $this->application->services['session']->mailboxes   = $mail->getMailboxes();
+            }
             if (!empty($this->request->getQuery('folder'))) {
                 $currentFolder = $this->request->getQuery('folder');
                 $mail->setFolder($currentFolder)->open('/ssl');
             } else {
                 $currentFolder = 'INBOX';
             }
+
             $this->application->services['session']->currentFolder = $currentFolder;
+
             $this->view->currentAccountId   = $this->application->services['session']->currentAccountId;
             $this->view->currentAccountName = $this->application->services['session']->currentAccountName;
-
-            if (!isset($this->application->services['session']->imapFolders)) {
-                $this->application->services['session']->imapFolders = $mail->getFolders();
-                $this->application->services['session']->mailboxes   = $mail->getMailboxes();
-            }
-            $this->view->imapFolders   = $this->application->services['session']->imapFolders;
-            $this->view->currentFolder = $currentFolder;
-            $this->view->title         = $currentFolder;
-            $this->view->messages      = $mail->fetchAll($page, $limit, $sort, $reverse, $search);
-            $this->view->mailboxTotal  = $mail->getMailboxTotal();
-            $this->view->unread        = $mail->getNumberOfUnread();
-            $this->view->mailboxes     = $mail->getMailboxes();
-            $this->view->pages         = ($mail->hasPages($limit)) ?
+            $this->view->imapFolders        = $this->application->services['session']->imapFolders;
+            $this->view->currentFolder      = $currentFolder;
+            $this->view->title              = $currentFolder;
+            $this->view->messages           = $mail->fetchAllMessages($mail->fetchAllMessageIds($sort, $reverse, $search), $page, $limit);
+            $this->view->mailboxTotal       = $mail->getMailboxTotal();
+            $this->view->unread             = $mail->getNumberOfUnread();
+            $this->view->mailboxes          = $mail->getMailboxes();
+            $this->view->pages              = ($mail->hasPages($limit)) ?
                 new Paginator\Form($mail->getMailboxTotal(), $limit) : null;
         } else {
             $this->view->title = 'Mail';
@@ -295,6 +296,35 @@ class MailController extends AbstractController
         $this->view->attachments = $mail->getAttachmentLinks($this->view->message->parts, $id);
         $this->view->title       = (isset($this->view->message) && isset($this->view->message->headers) && isset($this->view->message->headers->Subject)) ?
             $mail->decodeText($this->view->message->headers->Subject) : '';
+
+        $this->view->imapErrors = imap_errors();
+
+        $this->send();
+    }
+
+    /**
+     * View CC mail list method
+     *
+     * @param  int $id
+     * @return void
+     */
+    public function cc($id)
+    {
+        $mail = new Model\Mail();
+        $mail->loadAccount($this->application->services['session']->currentAccountId);
+
+        if (isset($this->application->services['session']->currentFolder)) {
+            $mail->setFolder($this->application->services['session']->currentFolder)->open('/ssl');
+        }
+
+        $this->prepareView('mail/cc.phtml');
+
+        $this->view->id      = $id;
+        $this->view->headers = $mail->fetchHeadersById($id);
+        $this->view->title   = (isset($this->view->headers->Subject)) ?
+            $mail->decodeText($this->view->headers->Subject) : '';
+
+        $this->view->imapErrors = imap_errors();
 
         $this->send();
     }
