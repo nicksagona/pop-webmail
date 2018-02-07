@@ -739,10 +739,9 @@ class Mail extends AbstractModel
      *
      * @param  string $folder
      * @param  array  $result
-     * @param  string $parent
      * @return void
      */
-    protected function parseFolders($folder, &$result, $parent = null)
+    protected function parseFolders($folder, &$result)
     {
         if (strpos($folder, '}') !== false) {
             $folder = substr($folder, (strpos($folder, '}') + 1));
@@ -753,20 +752,13 @@ class Mail extends AbstractModel
             if (!isset($result[$f])) {
                 $result[$f] = [
                     'folder'     => $f,
-                    'unread'     => 0,
                     'subfolders' => []
                 ];
             }
-            $currentFolder = (null !== $parent) ? $parent . '/' . $f : $f;
-            //$this->imap->setFolder($currentFolder)->open($this->imapFlags);
-            //$result[$f]['unread'] = $this->imap->getNumberOfUnreadMessages();
-            $this->parseFolders($s, $result[$f]['subfolders'], $f);
+            $this->parseFolders($s, $result[$f]['subfolders']);
         } else {
-            $currentFolder = (null !== $parent) ? $parent . '/' . $folder : $folder;
-            //$this->imap->setFolder($currentFolder)->open($this->imapFlags);
             $result[$folder] = [
                 'folder'     => $folder,
-                'unread'     => 0, //$this->imap->getNumberOfUnreadMessages(),
                 'subfolders' => []
             ];
         }
