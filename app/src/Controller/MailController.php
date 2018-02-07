@@ -91,6 +91,27 @@ class MailController extends AbstractController
                 $currentFolder = 'INBOX';
             }
 
+            //$this->application->services['cache']->clear();
+            //$this->application->services['cache']->destroy();
+            //exit();
+
+            $cacheId = $this->application->services['session']->currentAccountId . '-' . $currentFolder;
+
+            if ($this->application->services['cache']->hasItem($cacheId)) {
+                $ids      = $this->application->services['cache']->getItem($cacheId);
+                if ($this->application->services['cache']->hasItem($cacheId . '-' . $page)) {
+                    $messages = $this->application->services['cache']->getItem($cacheId . '-' . $page);
+                } else {
+                    $messages = $mail->fetchAllMessages($ids, $page, $limit);
+                    $this->application->services['cache']->saveItem($cacheId . '-' . $page, $messages);
+                }
+            } else {
+                $ids      = $mail->fetchAllMessageIds($sort, $reverse, $search);
+                $messages = $mail->fetchAllMessages($ids, $page, $limit);
+                $this->application->services['cache']->saveItem($cacheId, $ids);
+                $this->application->services['cache']->saveItem($cacheId . '-' . $page, $messages);
+            }
+
             $this->application->services['session']->currentFolder = $currentFolder;
 
             $this->view->currentAccountId   = $this->application->services['session']->currentAccountId;
@@ -98,7 +119,7 @@ class MailController extends AbstractController
             $this->view->imapFolders        = $this->application->services['session']->imapFolders;
             $this->view->currentFolder      = $currentFolder;
             $this->view->title              = $currentFolder;
-            $this->view->messages           = $mail->fetchAllMessages($mail->fetchAllMessageIds($sort, $reverse, $search), $page, $limit);
+            $this->view->messages           = $messages;
             $this->view->mailboxTotal       = $mail->getMailboxTotal();
             $this->view->unread             = $mail->getNumberOfUnread();
             $this->view->mailboxes          = $mail->getMailboxes();

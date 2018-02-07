@@ -14,6 +14,7 @@
 namespace PopWebmail;
 
 use Pop\Application;
+use Pop\Cache;
 use Pop\Db;
 use Pop\Http\Request;
 use Pop\Http\Response;
@@ -64,6 +65,9 @@ class Module extends \Pop\Module\Module
                     'response'    => new Response()
                 ]
             );
+
+            //$this->application->services->set('cache', new Cache\Cache(new Cache\Adapter\File(__DIR__ . '/../../data/cache')));
+            $this->application->services->set('cache', new Cache\Cache(new Cache\Adapter\Redis(1800)));
 
             $this->application->on('app.dispatch.pre', 'PopWebmail\Event\Auth::authenticate');
         }
