@@ -66,9 +66,6 @@ class Module extends \Pop\Module\Module
                 ]
             );
 
-            //$this->application->services->set('cache', new Cache\Cache(new Cache\Adapter\File(__DIR__ . '/../../data/cache')));
-            $this->application->services->set('cache', new Cache\Cache(new Cache\Adapter\Redis(1800)));
-
             $this->application->on('app.dispatch.pre', 'PopWebmail\Event\Auth::authenticate');
         }
 
