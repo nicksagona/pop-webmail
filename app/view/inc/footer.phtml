@@ -1,5 +1,7 @@
     <footer class="footer">
-        <div><span>Pop Webmail v<?=\PopWebmail\Module::VERSION; ?>.</span> <span>&copy; <?=date('Y'); ?> <a href="https://www.nolainteractive.com/" target="_blank">NOLA Interactive</a>.</span> <span>All Rights Reserved.</span></div>
+        <div>
+            <span>Pop Webmail v<?=\PopWebmail\Module::VERSION; ?>.</span> <span>&copy; <?=date('Y'); ?> <a href="https://www.nolainteractive.com/" target="_blank">NOLA Interactive</a>.</span> <span>All Rights Reserved. <a href="/mail/clear" onclick="$('#loading').show(); return true;">Clear Cache</a>.</span>
+        </div>
     </footer>
     <div id="saved" class="alert alert-success" role="alert"<?=(isset($saved) ? ' data-saved="1"' : null); ?>>Saved</div>
     <div id="removed" class="alert alert-danger" role="alert"<?=(isset($removed) ? ' data-removed="1"' : null); ?>>Removed</div>
