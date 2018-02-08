@@ -2,6 +2,7 @@
 /app/config/database/sqlite.php
 /app/config/app.http.php
 /data/.htpopwebmail.sqlite
+/data/cache/*
 /vendor
 /public/assets/fonts
 /public/assets/app.*

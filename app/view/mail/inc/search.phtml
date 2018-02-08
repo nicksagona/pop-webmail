@@ -11,7 +11,7 @@
                 <div>
                     <button type="submit" title="Search" class="btn btn-sm btn-primary search-btn"><i class="material-icons icon-sm">search</i></button>
                     <input type="hidden" name="folder" value="<?=$currentFolder; ?>" />
-                    <a href="/mail?folder=<?=$currentFolder; ?>" title="Clear Search" class="btn btn-sm btn-primary search-btn"><i class="material-icons icon-sm">clear</i></a>
+                    <a href="/mail?folder=<?=$currentFolder; ?>" title="Clear Search" class="btn btn-sm btn-primary search-btn" onclick="$('#loading').show(); return true;"><i class="material-icons icon-sm">clear</i></a>
                     <a href="#" title="Advanced Search" class="btn btn-sm btn-primary search-btn" onclick="return pop.openMailForm('#advanced-search-form-div');"><i class="material-icons icon-sm">launch</i></a>
                 </div>
             </form>

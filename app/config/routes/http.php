@@ -65,6 +65,10 @@ return [
         'controller' => 'PopWebmail\Controller\MailController',
         'action'     => 'clean'
     ],
+    '/mail/clear' => [
+        'controller' => 'PopWebmail\Controller\MailController',
+        'action'     => 'clear'
+    ],
     '/mail/folder/add' => [
         'controller' => 'PopWebmail\Controller\MailController',
         'action'     => 'addFolder'

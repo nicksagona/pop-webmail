@@ -28,7 +28,7 @@ use Pop\View\View;
  * @link       https://github.com/nicksagona/pop-webmail
  * @author     Nick Sagona, III <dev@nolainteractive.com>
  * @copyright  Copyright (c) 2009-2018 NOLA Interactive, LLC. (http://www.nolainteractive.com)
- * @version    0.0.1-alpha
+ * @version    0.9-beta
  */
 class Module extends \Pop\Module\Module
 {
@@ -37,7 +37,7 @@ class Module extends \Pop\Module\Module
      * Pop Webmail Version
      * @var string
      */
-    const VERSION = '0.0.1-alpha';
+    const VERSION = '0.9-beta';
 
     /**
      * Module name

@@ -178,6 +178,27 @@ $(document).ready(function(){
         });
     }
 
+    if ($('#login-form')[0] != undefined) {
+        $('#login-form').submit(function(){
+            $('#loading').show();
+            return true;
+        });
+    }
+
+    if ($('form.pop-paginator-form')[0] != undefined) {
+        $('form.pop-paginator-form').submit(function() {
+            $('#loading').show();
+            return true;
+        });
+    }
+
+    if ($('div.page-links')[0] != undefined) {
+        $('div.page-links > a').click(function() {
+            $('#loading').show();
+            return true;
+        });
+    }
+
     if ($('#delete-form')[0] != undefined) {
         $('#delete-form').submit(function(){
             return confirm('This action cannot be undone. Are you sure?');

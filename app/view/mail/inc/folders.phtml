@@ -24,10 +24,10 @@ function generateFolderList($folders, $depth = 0, $parent = null, $currentFolder
 
     foreach($folders as $folderName => $folderContent) {
         $current = (($currentFolder) == $parent . $folderName) ? ' class="current-folder"' : '';
-        $url     = ($parent . $folderName != '[Gmail]') ? '/mail?folder=' . $parent . $folderName . '"' : '#" onclick="return false;"';
+        $url     = ($parent . $folderName != '[Gmail]') ? '/mail?folder=' . $parent . $folderName . '" onclick="$(\'#loading\').show(); return true;"' : '#" onclick="return false;"';
         $output .= str_repeat('    ', $depth) . '    <li><a href="' . $url . $current .
             '>' . '<i class="material-icons icon-sm">folder' . (($current != '') ? '_open' : '') . '</i>' . $folderName . '</a>' .
-            ((!empty($folderContent['subfolders'])) ? '<a href="#" onclick="return pop.toggleMailFolder(this);"><i class="material-icons icon-sm">expand_more</i></a>' : '');
+            ((!empty($folderContent['subfolders']) && ($depth < 2)) ? '<a href="#" onclick="return pop.toggleMailFolder(this);"><i class="material-icons icon-sm">expand_more</i></a>' : '');
         if (!empty($folderContent['subfolders'])) {
             $output .= PHP_EOL . generateFolderList($folderContent['subfolders'], $depth, $parent . $folderName . '/', $currentFolder) . str_repeat('    ', $depth);
         }

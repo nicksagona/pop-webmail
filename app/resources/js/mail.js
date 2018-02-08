@@ -151,7 +151,24 @@ $(document).ready(function(){
     }
 
     if ($('#folder-select')[0] != undefined) {
-        $('#folder-select').change(pop.changeFolder);
+        $('#folder-select').change(function(){
+            $('#loading').show();
+            pop.changeFolder();
+        });
+    }
+
+    if ($('#mail-search-form')[0] != undefined) {
+        $('#mail-search-form').submit(function() {
+            $('#loading').show();
+            return true;
+        });
+    }
+
+    if ($('#advanced-search-form')[0] != undefined) {
+        $('#advanced-search-form').submit(function() {
+            $('#loading').show();
+            return true;
+        });
     }
 
     if ($('a.current-folder')[0] != undefined) {

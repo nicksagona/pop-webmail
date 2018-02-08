@@ -28,7 +28,7 @@ use Pop\Paginator;
  * @link       https://github.com/nicksagona/pop-webmail
  * @author     Nick Sagona, III <dev@nolainteractive.com>
  * @copyright  Copyright (c) 2009-2018 NOLA Interactive, LLC. (http://www.nolainteractive.com)
- * @version    0.0.1-alpha
+ * @version    0.9-beta
  */
 class MailController extends AbstractController
 {
@@ -112,11 +112,11 @@ class MailController extends AbstractController
 
                 if (($total != $currentTotal) || ($cachedSort != $sort) || ($cachedReverse != $reverse) || ($cachedSearch != $search)) {
                     $this->application->services['cache']->deleteItem($cacheId);
-                    $ids      = $mail->fetchAllMessageIds($sort, $reverse, $search);
-                    $messages = $mail->fetchAllMessages($ids, $page, $limit);
-                    $total    = $currentTotal;
-                    $unread   = $mail->getNumberOfUnread();
-                    $this->application->services['cache']->saveItem($cacheId, [
+                    $ids        = $mail->fetchAllMessageIds($sort, $reverse, $search);
+                    $messages   = $mail->fetchAllMessages($ids, $page, $limit);
+                    $total      = $currentTotal;
+                    $unread     = $mail->getNumberOfUnread();
+                    $cachedMail = [
                         'ids'          => $ids,
                         'total'        => $total,
                         'unread'       => $unread,
@@ -126,7 +126,9 @@ class MailController extends AbstractController
                         'pages'        => [
                             $page => $messages
                         ]
-                    ]);
+                    ];
+
+                    $this->application->services['cache']->saveItem($cacheId, $cachedMail);
                 }
 
                 if (!isset($cachedPages[$page])) {
@@ -455,6 +457,19 @@ class MailController extends AbstractController
             $dir = new Dir(__DIR__ . '/../../../data/tmp/' . $folder);
             $dir->emptyDir(true);
         }
+    }
+
+    /**
+     * Clear mail cache
+     *
+     * @return void
+     */
+    public function clear()
+    {
+        $this->application->services['cache']->clear();
+        touch(__DIR__ . '/../../../data/cache/.empty');
+        chmod(__DIR__ . '/../../../data/cache/.empty', 0777);
+        $this->redirect('/mail');
     }
 
     /**

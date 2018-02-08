@@ -42,6 +42,10 @@
   border-top: solid 1px #ddd;
 }
 
+.mail-folder-div li {
+  list-style-type: none;
+}
+
 .mail-folder-div > ul > li > a:nth-child(1) > i.material-icons {
   position: relative;
   margin-right: 5px;

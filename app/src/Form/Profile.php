@@ -24,7 +24,7 @@ use Pop\Validator;
  * @link       https://github.com/nicksagona/pop-webmail
  * @author     Nick Sagona, III <dev@nolainteractive.com>
  * @copyright  Copyright (c) 2009-2018 NOLA Interactive, LLC. (http://www.nolainteractive.com)
- * @version    0.0.1-alpha
+ * @version    0.9-beta
  */
 class Profile extends \Pop\Form\Form
 {

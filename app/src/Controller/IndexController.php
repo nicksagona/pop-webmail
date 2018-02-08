@@ -24,7 +24,7 @@ use PopWebmail\Model;
  * @link       https://github.com/nicksagona/pop-webmail
  * @author     Nick Sagona, III <dev@nolainteractive.com>
  * @copyright  Copyright (c) 2009-2018 NOLA Interactive, LLC. (http://www.nolainteractive.com)
- * @version    0.0.1-alpha
+ * @version    0.9-beta
  */
 class IndexController extends AbstractController
 {
@@ -127,9 +127,11 @@ class IndexController extends AbstractController
      */
     public function logout()
     {
-        $this->application->services['cache']->clear();
-        touch(__DIR__ . '/../../../data/cache/.empty');
-        chmod(__DIR__ . '/../../../data/cache/.empty', 0777);
+        if (null !== $this->request->getQuery('clear')) {
+            $this->application->services['cache']->clear();
+            touch(__DIR__ . '/../../../data/cache/.empty');
+            chmod(__DIR__ . '/../../../data/cache/.empty', 0777);
+        }
 
         $user = new Model\User();
         $user->logout(
