@@ -127,6 +127,10 @@ class IndexController extends AbstractController
      */
     public function logout()
     {
+        $this->application->services['cache']->clear();
+        touch(__DIR__ . '/../../../data/cache/.empty');
+        chmod(__DIR__ . '/../../../data/cache/.empty', 0777);
+
         $user = new Model\User();
         $user->logout(
             $this->application->services['session'],

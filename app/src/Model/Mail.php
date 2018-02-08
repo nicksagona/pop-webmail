@@ -163,6 +163,16 @@ class Mail extends AbstractModel
     }
 
     /**
+     * Get IMAP flags
+     *
+     * @return string
+     */
+    public function getImapFlags()
+    {
+        return $this->imapFlags;
+    }
+
+    /**
      * Set folder
      *
      * @param  string $folder

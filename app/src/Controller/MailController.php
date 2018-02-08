@@ -86,30 +86,71 @@ class MailController extends AbstractController
             }
             if (!empty($this->request->getQuery('folder'))) {
                 $currentFolder = $this->request->getQuery('folder');
-                $mail->setFolder($currentFolder)->open('/ssl');
+                $mail->setFolder($currentFolder)->open($mail->getImapFlags());
             } else {
                 $currentFolder = 'INBOX';
             }
 
-            //$this->application->services['cache']->clear();
-            //$this->application->services['cache']->destroy();
-            //exit();
-
             $cacheId = $this->application->services['session']->currentAccountId . '-' . $currentFolder;
 
+            if ((null !== $this->request->getQuery('refresh')) && ($this->application->services['cache']->hasItem($cacheId))) {
+                $this->application->services['cache']->deleteItem($cacheId);
+                $url = str_replace(['&refresh=1', '?refresh=1'], ['', ''], $this->request->getServer('REQUEST_URI'));
+                $this->redirect($url);
+            }
+
             if ($this->application->services['cache']->hasItem($cacheId)) {
-                $ids      = $this->application->services['cache']->getItem($cacheId);
-                if ($this->application->services['cache']->hasItem($cacheId . '-' . $page)) {
-                    $messages = $this->application->services['cache']->getItem($cacheId . '-' . $page);
-                } else {
+                $cachedMail    = $this->application->services['cache']->getItem($cacheId);
+                $ids           = $cachedMail['ids'];
+                $total         = $cachedMail['total'];
+                $unread        = $cachedMail['unread'];
+                $cachedSort    = $cachedMail['sort'];
+                $cachedReverse = $cachedMail['reverse'];
+                $cachedSearch  = $cachedMail['search'];
+                $cachedPages   = $cachedMail['pages'];
+                $currentTotal  = $mail->getMailboxTotal();
+
+                if (($total != $currentTotal) || ($cachedSort != $sort) || ($cachedReverse != $reverse) || ($cachedSearch != $search)) {
+                    $this->application->services['cache']->deleteItem($cacheId);
+                    $ids      = $mail->fetchAllMessageIds($sort, $reverse, $search);
                     $messages = $mail->fetchAllMessages($ids, $page, $limit);
-                    $this->application->services['cache']->saveItem($cacheId . '-' . $page, $messages);
+                    $total    = $currentTotal;
+                    $unread   = $mail->getNumberOfUnread();
+                    $this->application->services['cache']->saveItem($cacheId, [
+                        'ids'          => $ids,
+                        'total'        => $total,
+                        'unread'       => $unread,
+                        'sort'         => $sort,
+                        'reverse'      => $reverse,
+                        'search'       => $search,
+                        'pages'        => [
+                            $page => $messages
+                        ]
+                    ]);
                 }
+
+                if (!isset($cachedPages[$page])) {
+                    $cachedMail['pages'][$page] = $mail->fetchAllMessages($ids, $page, $limit);
+                    $this->application->services['cache']->saveItem($cacheId, $cachedMail);
+                }
+
+                $messages = $cachedMail['pages'][$page];
             } else {
                 $ids      = $mail->fetchAllMessageIds($sort, $reverse, $search);
                 $messages = $mail->fetchAllMessages($ids, $page, $limit);
-                $this->application->services['cache']->saveItem($cacheId, $ids);
-                $this->application->services['cache']->saveItem($cacheId . '-' . $page, $messages);
+                $total    = $mail->getMailboxTotal();
+                $unread   = $mail->getNumberOfUnread();
+                $this->application->services['cache']->saveItem($cacheId, [
+                    'ids'          => $ids,
+                    'total'        => $total,
+                    'unread'       => $unread,
+                    'sort'         => $sort,
+                    'reverse'      => $reverse,
+                    'search'       => $search,
+                    'pages'        => [
+                        $page => $messages
+                    ]
+                ]);
             }
 
             $this->application->services['session']->currentFolder = $currentFolder;
@@ -120,8 +161,8 @@ class MailController extends AbstractController
             $this->view->currentFolder      = $currentFolder;
             $this->view->title              = $currentFolder;
             $this->view->messages           = $messages;
-            $this->view->mailboxTotal       = $mail->getMailboxTotal();
-            $this->view->unread             = $mail->getNumberOfUnread();
+            $this->view->mailboxTotal       = $total;
+            $this->view->unread             = $unread;
             $this->view->mailboxes          = $mail->getMailboxes();
             $this->view->pages              = ($mail->hasPages($limit)) ?
                 new Paginator\Form($mail->getMailboxTotal(), $limit) : null;
@@ -159,7 +200,7 @@ class MailController extends AbstractController
             $mail = new Model\Mail();
             $mail->loadAccount($this->application->services['session']->currentAccountId);
             if (isset($this->application->services['session']->currentFolder)) {
-                $mail->setFolder($this->application->services['session']->currentFolder)->open('/ssl');
+                $mail->setFolder($this->application->services['session']->currentFolder)->open($mail->getImapFlags());
             }
             $mail->process($this->request->getPost(), $this->application->services['session']->mailboxes);
             if ($this->request->getPost('mail_process_action') == -1) {
@@ -203,7 +244,7 @@ class MailController extends AbstractController
 
         if (null !== $this->request->getQuery('id')) {
             if (isset($this->application->services['session']->currentFolder)) {
-                $mail->setFolder($this->application->services['session']->currentFolder)->open('/ssl');
+                $mail->setFolder($this->application->services['session']->currentFolder)->open($mail->getImapFlags());
             }
 
             $this->view->id = $this->request->getQuery('id');
@@ -306,7 +347,7 @@ class MailController extends AbstractController
         $mail->loadAccount($this->application->services['session']->currentAccountId);
 
         if (isset($this->application->services['session']->currentFolder)) {
-            $mail->setFolder($this->application->services['session']->currentFolder)->open('/ssl');
+            $mail->setFolder($this->application->services['session']->currentFolder)->open($mail->getImapFlags());
         }
 
         $this->prepareView('mail/view.phtml');
@@ -335,7 +376,7 @@ class MailController extends AbstractController
         $mail->loadAccount($this->application->services['session']->currentAccountId);
 
         if (isset($this->application->services['session']->currentFolder)) {
-            $mail->setFolder($this->application->services['session']->currentFolder)->open('/ssl');
+            $mail->setFolder($this->application->services['session']->currentFolder)->open($mail->getImapFlags());
         }
 
         $this->prepareView('mail/cc.phtml');
@@ -363,7 +404,7 @@ class MailController extends AbstractController
         $mail->loadAccount($this->application->services['session']->currentAccountId);
 
         if (isset($this->application->services['session']->currentFolder)) {
-            $mail->setFolder($this->application->services['session']->currentFolder)->open('/ssl');
+            $mail->setFolder($this->application->services['session']->currentFolder)->open($mail->getImapFlags());
         }
 
         $attachment = $mail->fetchAttachment($id, $i - 1);
@@ -428,7 +469,7 @@ class MailController extends AbstractController
             $mail->loadAccount($this->application->services['session']->currentAccountId);
 
             if (isset($this->application->services['session']->currentFolder)) {
-                $mail->setFolder($this->application->services['session']->currentFolder)->open('/ssl');
+                $mail->setFolder($this->application->services['session']->currentFolder)->open($mail->getImapFlags());
             }
 
             $mail->addFolder($this->request->getPost());
@@ -453,7 +494,7 @@ class MailController extends AbstractController
             $mail->loadAccount($this->application->services['session']->currentAccountId);
 
             if (isset($this->application->services['session']->currentFolder)) {
-                $mail->setFolder($this->application->services['session']->currentFolder)->open('/ssl');
+                $mail->setFolder($this->application->services['session']->currentFolder)->open($mail->getImapFlags());
             }
 
             $mail->renameFolder($this->request->getPost());
@@ -478,7 +519,7 @@ class MailController extends AbstractController
             $mail->loadAccount($this->application->services['session']->currentAccountId);
 
             if (isset($this->application->services['session']->currentFolder)) {
-                $mail->setFolder($this->application->services['session']->currentFolder)->open('/ssl');
+                $mail->setFolder($this->application->services['session']->currentFolder)->open($mail->getImapFlags());
             }
 
             $mail->removeFolder($this->request->getPost());
