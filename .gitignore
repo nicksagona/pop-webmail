@@ -1,5 +1,6 @@
 /logs
 /app/config/database/sqlite.php
+/app/config/app.http.php
 /data/.htpopwebmail.sqlite
 /vendor
 /public/assets/fonts
