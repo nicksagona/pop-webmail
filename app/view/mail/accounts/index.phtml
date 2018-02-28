@@ -10,6 +10,7 @@ include __DIR__ . '/../../inc/header.phtml';
 <?php endif; ?>
             <nav class="btn-nav">
                 <nav><a class="btn-sm text-uppercase" href="/mail/accounts/create">+ Add</a></nav>
+                <nav><a class="btn-sm text-uppercase" href="/mail">Back</a></nav>
             </nav>
 <?php if (count($accounts) > 0): ?>
             <form action="/mail/accounts/delete" method="post" id="delete-form">

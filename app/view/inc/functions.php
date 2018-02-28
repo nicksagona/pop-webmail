@@ -45,3 +45,13 @@ function getFilesize($size) {
     }
     return $result;
 }
+
+function decodeText($text)
+{
+    $decodedValues = imap_mime_header_decode(imap_utf8($text));
+    $decoded       = '';
+    foreach ($decodedValues as $string) {
+        $decoded .= $string->text;
+    }
+    return $decoded;
+}

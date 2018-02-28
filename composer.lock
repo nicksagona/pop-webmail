@@ -401,16 +401,16 @@
         },
         {
             "name": "popphp/pop-mail",
-            "version": "3.0.3",
+            "version": "3.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/popphp/pop-mail.git",
-                "reference": "733a258642282600f67d2746b87f83c367719f58"
+                "reference": "674e501c7eecaecb49744891eef96486e1d02ab0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/popphp/pop-mail/zipball/733a258642282600f67d2746b87f83c367719f58",
-                "reference": "733a258642282600f67d2746b87f83c367719f58",
+                "url": "https://api.github.com/repos/popphp/pop-mail/zipball/674e501c7eecaecb49744891eef96486e1d02ab0",
+                "reference": "674e501c7eecaecb49744891eef96486e1d02ab0",
                 "shasum": ""
             },
             "require": {
@@ -451,7 +451,7 @@
                 "pop php",
                 "send mail"
             ],
-            "time": "2018-02-07T17:31:51+00:00"
+            "time": "2018-02-09T21:09:37+00:00"
         },
         {
             "name": "popphp/pop-paginator",

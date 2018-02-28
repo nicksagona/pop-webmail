@@ -205,6 +205,10 @@ table.mail-table > tbody > tr > td {
   display: inline-block;
 }
 
+#mail-forward-attachments {
+  display: none;
+}
+
 button.mail-send-btn:after {
   font-family: "FontAwesome";
   font-weight: normal;

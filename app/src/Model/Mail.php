@@ -401,6 +401,12 @@ class Mail extends AbstractModel
                 if (isset($messages[$ids[$i]][0]) && isset($messages[$ids[$i]][0]->subject)) {
                     $messages[$ids[$i]][0]->subject = $this->decodeText($messages[$ids[$i]][0]->subject);
                 }
+                if (isset($messages[$ids[$i]][0]) && isset($messages[$ids[$i]][0]->from)) {
+                    $messages[$ids[$i]][0]->from = $this->decodeText($messages[$ids[$i]][0]->from);
+                }
+                if (isset($messages[$ids[$i]][0]) && isset($messages[$ids[$i]][0]->to)) {
+                    $messages[$ids[$i]][0]->to = $this->decodeText($messages[$ids[$i]][0]->to);
+                }
 
                 if (isset($structure->parts)) {
                     foreach ($structure->parts as $part) {
@@ -447,7 +453,7 @@ class Mail extends AbstractModel
      */
     public function decodeText($text)
     {
-        $decodedValues = imap_mime_header_decode($text);
+        $decodedValues = imap_mime_header_decode(imap_utf8($text));
         $decoded       = '';
 
         foreach ($decodedValues as $string) {
@@ -491,11 +497,12 @@ class Mail extends AbstractModel
      * Get message body content for message body
      *
      * @param  array   $parts
+     * @param  array   $headers
      * @param  int     $id
      * @param  boolean $editor
      * @return string
      */
-    public function getContentForMessage($parts = [], $id, $editor = false)
+    public function getContentForMessage($parts = [], $headers = [], $id, $editor = false)
     {
         $account     = new Account();
         $settings    = $account->getById($id);
@@ -503,16 +510,52 @@ class Mail extends AbstractModel
 
         if (!empty($parts)) {
             $messageContent = $this->getContent($parts);
-            $messageBody   .= PHP_EOL . PHP_EOL . '----------------------------' . PHP_EOL . PHP_EOL;
-
-            if (isset($messageContent['text'])) {
-                $messageBody .= strip_tags(str_replace(['<br>', '<br />'], ['', ''], $messageContent['text']));
+            if (($editor) && isset($messageContent['html'])) {
+                $messageHeaders = '';
+                if (isset($headers->Subject)) {
+                    $messageHeaders .= '<strong>Subject:</strong> ' . $headers->Subject . '<br />';
+                }
+                if (isset($headers->toaddress)) {
+                    $messageHeaders .= '<strong>To:</strong> <a href="mailto:' . $headers->toaddress . '">' . $headers->toaddress . '</a><br />';
+                }
+                if (isset($headers->fromaddress)) {
+                    $messageHeaders .= '<strong>From:</strong> <a href="mailto:' . $headers->fromaddress . '">' . $headers->fromaddress . '</a><br />';
+                }
+                if (isset($headers->Date)) {
+                    $messageHeaders .= '<strong>Date:</strong> ' . $headers->Date . '<br />';
+                }
+                $messageBody = '<p>&nbsp;</p><p>----------------------------</p>' . $messageHeaders . str_replace(["\r", "\n"], ['', ''], $messageContent['html']);
+            } else if (isset($messageContent['text'])) {
+                $messageHeaders = '';
+                if (isset($headers->Subject)) {
+                    $messageHeaders .= 'Subject: ' . $headers->Subject . PHP_EOL;
+                }
+                if (isset($headers->toaddress)) {
+                    $messageHeaders .= 'To: ' . $headers->toaddress . PHP_EOL;
+                }
+                if (isset($headers->fromaddress)) {
+                    $messageHeaders .= 'From: ' . $headers->fromaddress . PHP_EOL;
+                }
+                if (isset($headers->Date)) {
+                    $messageHeaders .= 'Date: ' . $headers->Date . PHP_EOL;
+                }
+                $messageBody = PHP_EOL . PHP_EOL . '----------------------------' . PHP_EOL . PHP_EOL . $messageHeaders . $messageContent['text'];
             } else if (isset($messageContent['fallback'])) {
-                $messageBody .= strip_tags(str_replace(['<br>', '<br />'], ['', ''], $messageContent['fallback']));
-            } else if (isset($messageContent['html'])) {
-                $messageBody .= strip_tags(str_replace(['<br>', '<br />'], ['', ''], $messageContent['html']));
+                $messageHeaders = '';
+                if (isset($headers->Subject)) {
+                    $messageHeaders .= 'Subject: ' . $headers->Subject . PHP_EOL;
+                }
+                if (isset($headers->toaddress)) {
+                    $messageHeaders .= 'To: ' . $headers->toaddress . PHP_EOL;
+                }
+                if (isset($headers->fromaddress)) {
+                    $messageHeaders .= 'From: ' . $headers->fromaddress . PHP_EOL;
+                }
+                if (isset($headers->Date)) {
+                    $messageHeaders .= 'Date: ' . $headers->Date . PHP_EOL;
+                }
+                $messageBody = PHP_EOL . PHP_EOL . '----------------------------' . PHP_EOL . PHP_EOL . $messageHeaders . $messageContent['fallback'];
             }
-
             if ($editor) {
                 $messageBody = nl2br($messageBody);
                 if (($settings['signature_on_all']) && !empty($settings['html_signature'])) {
@@ -533,6 +576,25 @@ class Mail extends AbstractModel
     }
 
     /**
+     * Get message attachments from message for forward
+     *
+     * @param  array   $parts
+     * @param  int     $id
+     * @return array
+     */
+    public function getAttachmentsForMessage($parts = [], $id)
+    {
+        $attachments = [];
+        foreach ($parts as $i => $part) {
+            if ($part->attachment) {
+                $attachments[] = '<a href="/mail/attachments/' . $id . '/' . ($i + 1) . '">' .
+                    (!empty($part->basename) ? $part->basename : 'file_' . ($i + 1)) . '</a>';
+            }
+        }
+        return $attachments;
+    }
+
+    /**
      * Get message body content
      *
      * @param  array $parts
@@ -543,12 +605,12 @@ class Mail extends AbstractModel
         $text         = null;
         $html         = null;
         $fallback     = null;
+        $head         = null;
         $foundContent = [
             'html'     => null,
             'text'     => null,
             'fallback' => null
         ];
-
         foreach ($parts as $i => $part) {
             if (!$part->attachment) {
                 $content = (base64_decode($part->content, true) !== false) ? base64_decode($part->content, true) : $part->content;
@@ -590,7 +652,6 @@ class Mail extends AbstractModel
                 }
             }
         }
-
         if (null !== $html) {
             $foundContent['html'] = $html;
         }

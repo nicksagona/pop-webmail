@@ -250,6 +250,7 @@ class MailController extends AbstractController
             }
 
             $this->view->id = $this->request->getQuery('id');
+            $this->view->form->setFieldValue('mid', $this->request->getQuery('id'));
 
             if (null !== $this->request->getQuery('action')) {
                 $message     = $mail->fetchById($this->request->getQuery('id'));
@@ -282,13 +283,20 @@ class MailController extends AbstractController
                 }
 
                 $messageBody = $mail->getContentForMessage(
-                    $message->parts, $this->application->services['session']->currentAccountId, (null !== $this->application->config['editor'])
+                    $message->parts, $message->headers, $this->application->services['session']->currentAccountId, (null !== $this->application->config['editor'])
                 );
+                $messageAttachments = $mail->getAttachmentsForMessage($message->parts, $this->request->getQuery('id'));
+                if (count($messageAttachments) > 0) {
+                    $this->view->sess        = $this->application->services['session'];
+                    $this->view->attachments = $messageAttachments;
+                } else {
+                    $this->view->form->removeField('attachments');
+                }
                 $this->view->form->setFieldValue('message', $messageBody);
             }
         } else {
             $messageBody = $mail->getContentForMessage(
-                [], $this->application->services['session']->currentAccountId, (null !== $this->application->config['editor'])
+                [], [], $this->application->services['session']->currentAccountId, (null !== $this->application->config['editor'])
             );
             $this->view->form->setFieldValue('message', $messageBody);
         }
@@ -320,6 +328,19 @@ class MailController extends AbstractController
                 $dir->emptyDir(true);
             }
 
+            if (!empty($this->request->getPost('attachments'))) {
+                $attachments = explode(',', $this->request->getPost('attachments'));
+                mkdir(__DIR__ . '/../../../../../../data/tmp/' . $this->request->getPost('mid'));
+                chmod(__DIR__ . '/../../../../../../data/tmp/' . $this->request->getPost('mid'), 0777);
+                foreach ($attachments as $aid) {
+                    $attachment = $mail->fetchAttachment($this->request->getPost('mid'), $aid - 1);
+                    file_put_contents(__DIR__ . '/../../../../../../data/tmp/' . $this->request->getPost('mid') . '/' . $attachment->filename, $attachment->content);
+                    $message->attachFile(__DIR__ . '/../../../../../../data/tmp/' . $this->request->getPost('mid') . '/' . $attachment->filename);
+                }
+                $dir    = new Dir(__DIR__ . '/../../../../../../data/tmp/' . $this->request->getPost('mid'));
+                $dir->emptyDir(true);
+            }
+
             $messageBody = html_entity_decode($this->request->getPost('message'), ENT_QUOTES, 'UTF-8');
 
             if ($this->request->getPost('html')) {
@@ -329,6 +350,7 @@ class MailController extends AbstractController
                 $message->setBody($messageBody);
             }
 
+            unset($this->sess->remove_aid);
             $mail->mailer()->send($message);
 
             $this->view->sent = true;

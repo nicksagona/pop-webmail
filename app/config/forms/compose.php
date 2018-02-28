@@ -33,6 +33,11 @@ return [
             'attributes' => [
                 'class'  => 'form-control'
             ]
+        ],
+        'attachments' => [
+            'type'       => 'hidden',
+            'label'      => '<i class="fa fa-paperclip fa-lg"></i>',
+            'value'      => ''
         ]
     ],
     [
@@ -67,6 +72,10 @@ return [
             'value' => '',
         ],
         'html' => [
+            'type'  => 'hidden',
+            'value' => '0',
+        ],
+        'mid' => [
             'type'  => 'hidden',
             'value' => '0',
         ]

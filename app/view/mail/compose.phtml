@@ -23,4 +23,23 @@ include __DIR__ . '/../inc/header-no-nav.phtml';
 <?php if (isset($editor)): ?>
 <?php include __DIR__ . '/inc/editor.phtml'; ?>
 <?php endif; ?>
+<?php if (isset($attachments)):
+if (!isset($sess->remove_aid)):
+    $remove_aid = [];
+    $sess->remove_aid = $remove_aid;
+endif;
+if (isset($_GET['remove_aid']) && !in_array((int)$_GET['remove_aid'], $sess->remove_aid)):
+    $remove_aid = $sess->remove_aid;
+    $remove_aid[] = (int)$_GET['remove_aid'];
+    $sess->remove_aid = $remove_aid;
+endif;
+?>
+    <div id="mail-forward-attachments">
+<?php foreach ($attachments as $i => $attachment): ?>
+<?php if (!in_array($i, $sess->remove_aid)): ?>
+        <span data-aid="<?=$i + 1; ?>"><?=$attachment; ?> <span class="small">[ <a class="gray-link" href="<?=$_SERVER['REQUEST_URI']; ?>&remove_aid=<?=$i; ?>">Remove </a> ]</span></span>
+<?php endif; ?>
+<?php endforeach; ?>
+    </div>
+<?php endif; ?>
 <?php include __DIR__ . '/../inc/no-footer.phtml'; ?>

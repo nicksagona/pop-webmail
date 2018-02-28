@@ -199,6 +199,18 @@ $(document).ready(function(){
         });
     }
 
+    if ($('#mail-forward-attachments')[0] != undefined) {
+        $('#mail-compose-form-fieldset-2 > dl > dd:nth-child(8)').append($('#mail-forward-attachments')[0].innerHTML);
+        var spans = $('#mail-forward-attachments > span');
+        var aids  = [];
+        for (var i = 0; i < spans.length; i++) {
+            aids.push($(spans[i]).data('aid'));
+        }
+        if (aids.length > 0) {
+            $('#attachments').val(aids.join(','));
+        }
+    }
+
     if ($('#express_setup')[0] != undefined) {
         $('#express_setup').change(pop.expressSetup);
     }
