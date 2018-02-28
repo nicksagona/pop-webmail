@@ -330,14 +330,14 @@ class MailController extends AbstractController
 
             if (!empty($this->request->getPost('attachments'))) {
                 $attachments = explode(',', $this->request->getPost('attachments'));
-                mkdir(__DIR__ . '/../../../../../../data/tmp/' . $this->request->getPost('mid'));
-                chmod(__DIR__ . '/../../../../../../data/tmp/' . $this->request->getPost('mid'), 0777);
+                mkdir(__DIR__ . '/../../../data/tmp/' . $this->request->getPost('mid'));
+                chmod(__DIR__ . '/../../../data/tmp/' . $this->request->getPost('mid'), 0777);
                 foreach ($attachments as $aid) {
                     $attachment = $mail->fetchAttachment($this->request->getPost('mid'), $aid - 1);
-                    file_put_contents(__DIR__ . '/../../../../../../data/tmp/' . $this->request->getPost('mid') . '/' . $attachment->filename, $attachment->content);
-                    $message->attachFile(__DIR__ . '/../../../../../../data/tmp/' . $this->request->getPost('mid') . '/' . $attachment->filename);
+                    file_put_contents(__DIR__ . '/../../../data/tmp/' . $this->request->getPost('mid') . '/' . $attachment->filename, $attachment->content);
+                    $message->attachFile(__DIR__ . '/../../../data/tmp/' . $this->request->getPost('mid') . '/' . $attachment->filename);
                 }
-                $dir    = new Dir(__DIR__ . '/../../../../../../data/tmp/' . $this->request->getPost('mid'));
+                $dir    = new Dir(__DIR__ . '/../../../data/tmp/' . $this->request->getPost('mid'));
                 $dir->emptyDir(true);
             }
 
